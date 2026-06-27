@@ -12,6 +12,7 @@ def muscle_table(muscle_json):
     table_data = [
         {"Muscle": muscle_json["name"].title(), "Categories": categories_string}
     ]
+    #CONVERTIR CATEGORIES EN MULTISELECT COLUMN
     edited_data = st.data_editor(data=table_data, key=f"{muscle_json["name"]}_table", hide_index=True, disabled=["Muscle"])
     col1, col2 = st.columns(2, gap="small")
     if col1.button("Save changes", icon=":material/save:"):
@@ -26,4 +27,11 @@ def muscle_table(muscle_json):
         with open(MUSCLES_FILE, 'w') as f:
             json.dump(muscles_data, f)
     if col2.button("Delete muscle", icon=":material/delete:"):
-        ...
+        with open(MUSCLES_FILE, 'r') as f:
+            muscles_data = json.load(f)
+        for muscle in muscles_data["muscles"]:
+            if muscle["name"] == muscle_json["name"]:
+                muscles_data["muscles"].remove(muscle)
+        with open(MUSCLES_FILE, 'w') as f:
+            json.dump(muscles_data, f)
+        st.rerun()
