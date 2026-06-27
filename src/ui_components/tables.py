@@ -1,37 +1,36 @@
 import streamlit as st
 import json
+from src.models.Muscle import Muscle
 
-def muscle_table(muscle_json):
-    if not muscle_json:
+def muscle_table(muscle):
+    if not muscle:
         st.info("Please select a muscle to view its categories.")
         return
     MUSCLES_FILE = "data/muscles.json"
-    for i in range(len(muscle_json["categories"])):
-        muscle_json["categories"][i] = muscle_json["categories"][i].title().replace("_", " ")
-    categories_string = ", ".join(muscle_json["categories"])
     table_data = [
-        {"Muscle": muscle_json["name"].title(), "Categories": categories_string}
+        {"Muscle": muscle.get_name().title(), "Categories": muscle.categories_to_string()}
     ]
     #CONVERTIR CATEGORIES EN MULTISELECT COLUMN
-    edited_data = st.data_editor(data=table_data, key=f"{muscle_json["name"]}_table", hide_index=True, disabled=["Muscle"])
+    edited_data = st.data_editor(data=table_data, key=f"{muscle.get_name()}_table", hide_index=True, disabled=["Muscle"])
     col1, col2 = st.columns(2, gap="small")
+    #SAVE
     if col1.button("Save changes", icon=":material/save:"):
         with open(MUSCLES_FILE, 'r') as f:
             muscles_data = json.load(f)
-        categories = edited_data[0]["Categories"].split(", ")
-        for i in range(len(categories)):
-            categories[i] = categories[i].lower().replace(" ", "_")
-        for muscle in muscles_data["muscles"]:
-            if muscle["name"] == muscle_json["name"]:
-                muscle["categories"] = categories
+        categories = Muscle.categories_to_list(edited_data[0]["Categories"])
+        muscle.set_categories(categories)
+        for i in range(len(muscles_data)):
+            if muscle.get_name() == muscles_data[i]["name"]:
+                muscles_data[i] = muscle.to_json()
         with open(MUSCLES_FILE, 'w') as f:
             json.dump(muscles_data, f)
+    #DELETE
     if col2.button("Delete muscle", icon=":material/delete:"):
         with open(MUSCLES_FILE, 'r') as f:
             muscles_data = json.load(f)
-        for muscle in muscles_data["muscles"]:
-            if muscle["name"] == muscle_json["name"]:
-                muscles_data["muscles"].remove(muscle)
+        for muscle_json in muscles_data:
+            if muscle.get_name() == muscle_json["name"]:
+                muscles_data.remove(muscle_json)
         with open(MUSCLES_FILE, 'w') as f:
             json.dump(muscles_data, f)
-        st.rerun()
+            st.rerun()

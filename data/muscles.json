@@ -1,1 +1,25 @@
-{"muscles": [{"name": "back", "categories": ["upper", "posterior_chain", "pull"]}]}
+[
+    {
+        "name": "back",
+        "categories": [
+            "upper",
+            "posterior_chain",
+            "pull"
+        ]
+    },
+    {
+        "name": "shoulder",
+        "categories": [
+            "upper",
+            "push",
+            "arm"
+        ]
+    },
+    {
+        "name": "pec",
+        "categories": [
+            "push",
+            "upper"
+        ]
+    }
+]
