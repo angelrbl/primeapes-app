@@ -1,12 +1,14 @@
 import streamlit as st
 import json
 from src.models.Muscle import Muscle
+from src.ui_components.sign_in import is_logged_in
 
 def muscle_table(muscle):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     if not muscle:
         st.info("Please select a muscle to view its categories.")
         return
-    MUSCLES_FILE = "data/muscles.json"
+    MUSCLES_FILE = f"{user.get_folder()}/muscles.json"
     table_data = [
         {"Muscle": muscle.get_name().title(), "Categories": muscle.categories_to_string()}
     ]

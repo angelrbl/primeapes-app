@@ -1,10 +1,20 @@
 [
     {
+        "user_id": "admin",
+        "name": "Admin",
+        "weight": 99,
+        "height": 200,
+        "measurments": {},
+        "macrocycles": [],
+        "user_folder": "data/default"
+    },
+    {
         "user_id": "angel",
         "name": "\u00c1ngel",
-        "weight": 89,
+        "weight": 87,
         "height": 185,
         "measurments": {},
-        "macrocycles": []
+        "macrocycles": [],
+        "user_folder": "data/users/angel"
     }
 ]

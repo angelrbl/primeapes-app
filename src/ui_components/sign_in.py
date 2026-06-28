@@ -19,10 +19,10 @@ def log_in():
             username = st.text_input(label="Username", placeholder="Type a valid username", key="login_user", value="")
             password = st.text_input(label="Password", placeholder="Type a valid password", key="login_password", type="password", value="")
 
-            if st.button("Log in"):
+            if st.button("Log in", key="log_in_button"):
                 if check_credentials(username=username, password=password):
                     st.session_state["logged_in"] = True
-                    st.session_state["username"] = username
+                    st.session_state["user"] = initialize_user(username)
                     st.rerun()
                 else:
                     st.error("Invalid username or password")
@@ -32,7 +32,7 @@ def log_in():
             new_username = (st.text_input(label="Username", placeholder="Type a valid username", key="signin_user", value="").lower().replace(" ", "_"))
             new_password = (st.text_input(label="Password", placeholder="Type a valid password", key="signin_password", type="password", value=""))
 
-            if st.button("Create account"):
+            if st.button("Create account", key="create_account_button"):
                 if new_username and new_password:
                     if create_user_account(username=new_username, password=new_password):
                         st.session_state["new_user_data"] = False
@@ -44,7 +44,7 @@ def log_in():
                 else:
                     st.error("Invalid username or password")
             if st.session_state["new_user_data"]:
-                initialize_user(user_id=new_username, name=st.session_state["new_user_data"]["name"], weight=st.session_state["new_user_data"]["weight"], height=st.session_state["new_user_data"]["height"])
+                initialize_new_user(user_id=new_username, name=st.session_state["new_user_data"]["name"], weight=st.session_state["new_user_data"]["weight"], height=st.session_state["new_user_data"]["height"])
                 st.session_state["new_user_data"] = False
                 st.success("Your account was successfully created! Now, please log in.")
 
@@ -53,7 +53,7 @@ def log_in():
 
 def log_out():
     st.session_state["logged_in"] = False
-    st.session_state["username"] = None
+    st.session_state["user"] = None
     st.rerun()
 
 def is_logged_in():
@@ -63,7 +63,7 @@ def is_logged_in():
     if st.session_state["logged_in"] == False:
         log_in()
 
-    st.sidebar.write(f"Logged in as: **{st.session_state["username"]}**")
+    st.sidebar.write(f"Logged in as: **{st.session_state["user"].get_id()}**")
     if st.sidebar.button("Log out"):
         log_out()
 

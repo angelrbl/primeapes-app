@@ -8,14 +8,6 @@
         ]
     },
     {
-        "name": "shoulder",
-        "categories": [
-            "upper",
-            "push",
-            "arm"
-        ]
-    },
-    {
         "name": "pec",
         "categories": [
             "push",
