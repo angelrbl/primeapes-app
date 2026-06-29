@@ -11,7 +11,7 @@ class Exercise:
 
     @classmethod
     def from_json(cls, data_dict):
-        return cls(name=data_dict["name"], main_muscles=data_dict["primary_muscles"], seconday_muscles=data_dict["secondary_muscles"])
+        return cls(name=data_dict["name"], primary_muscles=data_dict["primary_muscles"], secondary_muscles=data_dict["secondary_muscles"])
     
     def to_json(self):
         return {
@@ -20,5 +20,11 @@ class Exercise:
             "secondary_muscles": Muscle.to_list(self.secondary_muscles)
         }
 
+    def get_primary_muscles_list(self):
+        return Muscle.to_list(self.primary_muscles)
+
+    def get_secondary_muscles_list(self):
+        return Muscle.to_list(self.secondary_muscles)
+    
     def get_name(self):
         return self.name
