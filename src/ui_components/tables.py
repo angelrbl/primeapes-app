@@ -56,8 +56,8 @@ def exercise_table(exercise):
     table_data = [
         {
             "Exercise": exercise.get_name().replace("_", " ").title(),
-            "Primary muscles": exercise.get_primary_muscles_list(),
-            "Secondary muscles": exercise.get_secondary_muscles_list()
+            "Primary muscles": exercise.get_primary_muscles(),
+            "Secondary muscles": exercise.get_secondary_muscles()
         }
     ]
 
@@ -67,13 +67,13 @@ def exercise_table(exercise):
             "Primary muscles": st.column_config.MultiselectColumn(
                 "Primary muscles",
                 help="Exercise's primary muscles",
-                options=Muscle.to_list(Muscle.user_muscle_list(user)),
+                options=Muscle.to_list(Muscle.get_name_list(user)),
                 format_func=lambda x: x.capitalize()
             ),
             "Secondary muscles": st.column_config.MultiselectColumn(
                 "Secondary muscles",
                 help="Exercise's secondary muscles",
-                options=Muscle.to_list(Muscle.user_muscle_list(user)),
+                options=Muscle.to_list(Muscle.get_name_list(user)),
                 format_func=lambda x: x.capitalize()
             )
         }
@@ -84,12 +84,13 @@ def exercise_table(exercise):
     if col1.button("Save changes", icon=":material/save:", key="exercise_save_button"):
         with open(EXERCISES_FILE, 'r') as f:
             exercises_data = json.load(f)
-        exercise.set_categories(edited_data[0]["Categories"])
+        exercise.set_primary_muscles(muscles_list=edited_data[0]["Primary muscles"], user=user)
+        exercise.set_secondary_muscles(muscles_list=edited_data[0]["Secondary muscles"], user=user)
         for i in range(len(exercises_data)):
             if exercise.get_name() == exercises_data[i]["name"]:
                 exercises_data[i] = exercise.to_json()
         with open(EXERCISES_FILE, 'w') as f:
-            json.dump(exercise_data, f)
+            json.dump(exercises_data, f)
     #DELETE
     if col2.button("Delete muscle", icon=":material/delete:", key="exercise_delete_button"):
         with open(EXERCISES_FILE, 'r') as f:

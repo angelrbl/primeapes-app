@@ -1,6 +1,1 @@
-[
-    {
-        "name": "pec",
-        "categories": []
-    }
-]
+[{"name": "pec", "categories": ["upper"]}, {"name": "back", "categories": []}]

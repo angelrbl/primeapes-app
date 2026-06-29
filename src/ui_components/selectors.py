@@ -47,6 +47,6 @@ def exercise_select():
         else:
             for exercise_data in exercises_data:
                 if exercise_data["name"] == exercise_name.lower().replace(" ", "_"):
-                    exercise = Exercise.from_json(exercise_data)
+                    exercise = Exercise.from_json(exercise_data, user)
                     return exercise
     return exercise
