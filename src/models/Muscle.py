@@ -1,5 +1,5 @@
 class Muscle:
-    def __init__(self, name, categories):
+    def __init__(self, name, categories = []):
         self.name = name
         self.categories = categories
     
@@ -30,6 +30,13 @@ class Muscle:
     def add_category(self, category):
         self.categories.append(category)
         return True
+
+    @staticmethod
+    def to_list(muscle_list):
+        muscle_names = []
+        for muscle in muscle_list:
+            muscle_names.append(muscle.get_name())
+        return muscle_names
 
     def get_name(self):
         return self.name

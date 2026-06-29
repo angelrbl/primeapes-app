@@ -1,7 +1,6 @@
 import hashlib
 import json
-import os
-import shutil
+from src.utils.files import *
 from src.models.User import User
 
 CREDENTIALS_FILE = "data/user_credentials.json"
@@ -27,16 +26,6 @@ def create_user_account(username, password):
     with open(CREDENTIALS_FILE, 'w') as f:
         json.dump(credentials, f)
     return True
-
-def initialize_user_folders(user):
-    user_folder = user.get_folder()
-    default_folder = f"data/default"
-    if not os.path.exists(user_folder):
-        os.mkdir(user_folder)
-        if os.path.isfile(f"{default_folder}/muscles.json"):
-            shutil.copy(f"{default_folder}/muscles.json", f"{user_folder}/muscles.json")
-        if os.path.isfile(f"{default_folder}/exercises.json"):
-            shutil.copy(f"{default_folder}/exercises.json", f"{user_folder}/exercises.json")
 
 def initialize_new_user(user_id, name, weight, height):
     USER_FILE = "data/users.json"
