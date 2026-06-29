@@ -27,7 +27,6 @@ class Muscle:
             categories[i] = categories[i].lower().replace(" ", "_")
         return categories
 
-
     def add_category(self, category):
         self.categories.append(category)
         return True
@@ -37,5 +36,5 @@ class Muscle:
     def get_categories(self):
         return self.categories
     def set_categories(self, categories):
-        self.categories = categories
+        self.categories = [category.lower().replace(" ", "_") for category in categories]
         return True

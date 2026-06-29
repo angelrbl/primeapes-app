@@ -1,17 +1,1 @@
-[
-    {
-        "name": "back",
-        "categories": [
-            "upper",
-            "posterior_chain",
-            "pull"
-        ]
-    },
-    {
-        "name": "pec",
-        "categories": [
-            "push",
-            "upper"
-        ]
-    }
-]
+[{"name": "back", "categories": ["upper", "posterior_chain", "pull"]}, {"name": "pec", "categories": ["push", "upper"]}]
