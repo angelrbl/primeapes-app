@@ -3,6 +3,7 @@ import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.ui_components.sign_in import is_logged_in
+from src.utils.database import get_muscle_list
 
 def muscle_table(muscle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -67,13 +68,13 @@ def exercise_table(exercise):
             "Primary muscles": st.column_config.MultiselectColumn(
                 "Primary muscles",
                 help="Exercise's primary muscles",
-                options=Muscle.to_list(Muscle.get_name_list(user)),
+                options=Muscle.to_name_list(get_muscle_list(user)),
                 format_func=lambda x: x.capitalize()
             ),
             "Secondary muscles": st.column_config.MultiselectColumn(
                 "Secondary muscles",
                 help="Exercise's secondary muscles",
-                options=Muscle.to_list(Muscle.get_name_list(user)),
+                options=Muscle.to_name_list(get_muscle_list(user)),
                 format_func=lambda x: x.capitalize()
             )
         }
@@ -84,8 +85,15 @@ def exercise_table(exercise):
     if col1.button("Save changes", icon=":material/save:", key="exercise_save_button"):
         with open(EXERCISES_FILE, 'r') as f:
             exercises_data = json.load(f)
-        exercise.set_primary_muscles(muscles_list=edited_data[0]["Primary muscles"], user=user)
-        exercise.set_secondary_muscles(muscles_list=edited_data[0]["Secondary muscles"], user=user)
+
+        user_muscles = get_muscle_list(user)
+        muscle_map = {m.get_name(): m for m in user_muscles}
+        primary_muscles = [muscle_map[name] for name in edited_data[0]["Primary muscles"] if name in muscle_map]
+        secondary_muscles = [muscle_map[name] for name in edited_data[0]["Secondary muscles"] if name in muscle_map]
+
+        exercise.set_primary_muscles(muscles_list=primary_muscles)
+        exercise.set_secondary_muscles(muscles_list=secondary_muscles)
+
         for i in range(len(exercises_data)):
             if exercise.get_name() == exercises_data[i]["name"]:
                 exercises_data[i] = exercise.to_json()

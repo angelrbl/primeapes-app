@@ -4,6 +4,7 @@ from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.ui_components.sign_in import is_logged_in
+from src.utils.database import get_muscle_list
 
 def muscle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -45,8 +46,10 @@ def exercise_select():
             with open(EXERCISES_FILE, "w") as f:
                 json.dump(exercises_data, f)
         else:
+            user_muscles = get_muscle_list(user=user)
+            muscle_map = {m.get_name(): m for m in user_muscles}
             for exercise_data in exercises_data:
                 if exercise_data["name"] == exercise_name.lower().replace(" ", "_"):
-                    exercise = Exercise.from_json(exercise_data, user)
+                    exercise = Exercise.from_json(exercise_data, muscle_map)
                     return exercise
     return exercise
