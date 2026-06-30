@@ -63,7 +63,7 @@ def is_logged_in():
     if st.session_state["logged_in"] == False:
         log_in()
 
-    st.sidebar.write(f"Logged in as: **{st.session_state["user"].get_id()}**")
+    st.sidebar.write(f"Logged in as: **@{st.session_state["user"].get_id()}**")
     if st.sidebar.button("Log out"):
         log_out()
 

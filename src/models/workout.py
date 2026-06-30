@@ -1,4 +1,5 @@
 from src.models.Exercise import Exercise
+from src.models.Muscle import Muscle
 
 class Workout:
     def __init__(self, name, exercises = []):
@@ -22,28 +23,19 @@ class Workout:
     def to_json(self):
         return {
             "name": self.name,
-            "exercises": self.exercises
+            "exercises": [{
+                    "exercise": exercise["exercise"].get_name(),
+                    "sets": exercise["sets"],
+                    "reps": exercise["reps"],
+                    "note": exercise["note"]
+                } for exercise in self.exercises]
         }
 
     def add_exercise(self, exercise, sets, reps, note):
-        self.exercises.append({"exercise": exercise.get_name(), "sets": sets, "reps": reps, "note": note})
+        self.exercises.append({"exercise": exercise, "sets": sets, "reps": reps, "note": note})
 
-if __name__ == '__main__':
-    workout_data = {
-        "name": "Bench",
-        "exercises": [{
-                "exercise": "bench_press",
-                "sets": 3,
-                "reps": "5-8",
-                "note": "Al fallo"},
-            {
-                "exercise": "deadlift",
-                "sets": 2,
-                "reps": "1",
-                "note": "PR"    
-            }]
-    }
-    
-    exercise_map = {"bench_press": Exercise("bench_press", ["pec"], ["triceps", "shoulder"]), "deadlift": Exercise("deadlift", ["hamstrings", "lower_back"], ["quadriceps", "traps"])}
-    workout = Workout.from_json(workout_data, exercise_map)
-    print(workout.exercises)
+    def get_name(self):
+        return self.name
+
+    def get_exercises(self):
+        return self.exercises

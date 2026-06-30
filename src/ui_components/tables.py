@@ -2,8 +2,9 @@ import streamlit as st
 import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
+from src.models.Exercise import Exercise
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_muscle_list
+from src.utils.database import get_muscle_list, get_exercise_list
 
 def muscle_table(muscle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -109,3 +110,43 @@ def exercise_table(exercise):
         with open(EXERCISES_FILE, 'w') as f:
             json.dump(exercises_data, f)    
         st.rerun() 
+
+def workout_table(workout):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if not workout:
+        return
+    if len(get_exercise_list(user)) == 0:
+        st.warning("There are no exercises to build a workout with, please, create some exercises first.")
+        return
+    WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
+
+    exercises = workout.get_exercises()
+    #IF THERE ARE NO EXERCISES IN YOUR WORKOUT (IT IS A NEW WORKOUT), IT INITIALIZES AN EMPTY ENTRY SO THERE IS DATA ON TABLE_DATA
+    table_data = [
+        ({
+            "Exercises": exercise["exercise"].get_name().replace("_", " ").title(),
+            "Sets": exercise["sets"],
+            "Reps": exercise["reps"],
+            "Note": exercise["note"]
+        } for exercise in exercises) if len(exercises) != 0 else 
+        {   "Exercises": "",
+            "Sets": 3,
+            "Reps": "8-12",
+            "Note": ""
+        }
+    ]
+    edited_data = st.data_editor(
+        data=table_data, key=f"{workout.get_name()}_table", hide_index=True, num_rows="dynamic", 
+        column_config={
+            "Exercises": st.column_config.SelectboxColumn(
+                "Exercises",
+                help="User's exercises",
+                options=Exercise.to_name_list(get_exercise_list(user)),
+                format_func=lambda x: x.capitalize().replace("_", " "),
+                required=True,
+                default=None
+            ),
+            "Sets": st.column_config.NumberColumn("Sets", min_value=1, step=1, default=3),
+            "Reps": st.column_config.TextColumn("Reps", default="8-12"),
+            "Note": st.column_config.TextColumn("Note", default="")
+    })

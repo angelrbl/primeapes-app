@@ -39,3 +39,10 @@ class Exercise:
 
     def get_name(self):
         return self.name
+    
+    @staticmethod
+    def to_name_list(exercises_list):
+        exercise_names = []
+        for exercise in exercises_list:
+            exercise_names.append(exercise.get_name())
+        return exercise_names 
