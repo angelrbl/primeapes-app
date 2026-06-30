@@ -19,6 +19,12 @@ class Workout:
             } for exercise_data in exercises_data]
         return cls(name=data_dict["name"], exercises = exercises)
 
+    def to_json(self):
+        return {
+            "name": self.name,
+            "exercises": self.exercises
+        }
+
     def add_exercise(self, exercise, sets, reps, note):
         self.exercises.append({"exercise": exercise.get_name(), "sets": sets, "reps": reps, "note": note})
 

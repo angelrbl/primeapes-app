@@ -100,7 +100,7 @@ def exercise_table(exercise):
         with open(EXERCISES_FILE, 'w') as f:
             json.dump(exercises_data, f)
     #DELETE
-    if col2.button("Delete muscle", icon=":material/delete:", key="exercise_delete_button"):
+    if col2.button("Delete exercise", icon=":material/delete:", key="exercise_delete_button"):
         with open(EXERCISES_FILE, 'r') as f:
             exercises_data = json.load(f)
         for exercise_data in exercises_data:

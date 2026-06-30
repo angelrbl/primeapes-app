@@ -3,8 +3,9 @@ import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
+from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_muscle_list
+from src.utils.database import get_muscle_list, get_exercise_list
 
 def muscle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -53,3 +54,28 @@ def exercise_select():
                     exercise = Exercise.from_json(exercise_data, muscle_map)
                     return exercise
     return exercise
+
+def workout_select():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
+    with open(WORKOUTS_FILE, "r") as f:
+        workouts_data = json.load(f)
+    workout_names = [workout_data["name"].replace("_", " ").title() for workout_data in workouts_data]
+
+    workout_name = st.selectbox(label="Workout", index=None, accept_new_options=True, options=workout_names)
+
+    workout = None
+    if workout_name:
+        if workout_name not in workout_names:
+            workout = Workout(name=workout_name.lower().replace(" ", "_"))
+            workouts_data.append(workout.to_json())
+            with open(WORKOUTS_FILE, "w") as f:
+                json.dump(workouts_data, f)
+        else:
+            user_exercises = get_exercise_list(user=user)
+            exercise_map = {e.get_name(): e for e in user_exercises}
+            for workout_data in workouts_data:
+                if workout_data["name"] == workout_name.lower().replace(" ", "_"):
+                    workout = Workout.from_json(workout_data, exercise_map)
+                    return workout
+    return workout
