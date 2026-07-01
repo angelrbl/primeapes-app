@@ -10,4 +10,5 @@ st.title("Workout Tracker")
 st.write("Please, select a workout or create a new one: ")
 
 workout = workout_select()
-workout_table(workout)
+if workout:
+    workout_table(workout)

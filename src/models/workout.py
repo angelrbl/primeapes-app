@@ -16,6 +16,7 @@ class Workout:
                 "exercise": exercise_map[exercise_data["exercise"]],
                 "sets": exercise_data["sets"],
                 "reps": exercise_data["reps"],
+                "muscles": exercise_map[exercise_data["exercise"]].get_primary_muscles(),
                 "note": exercise_data["note"]
             } for exercise_data in exercises_data]
         return cls(name=data_dict["name"], exercises = exercises)
@@ -27,15 +28,29 @@ class Workout:
                     "exercise": exercise["exercise"].get_name(),
                     "sets": exercise["sets"],
                     "reps": exercise["reps"],
+                    "muscles": Muscle.to_name_list(exercise["muscles"]),
                     "note": exercise["note"]
                 } for exercise in self.exercises]
         }
 
     def add_exercise(self, exercise, sets, reps, note):
-        self.exercises.append({"exercise": exercise, "sets": sets, "reps": reps, "note": note})
+        self.exercises.append({"exercise": exercise, "sets": sets, "reps": reps, "muscles": exercise.get_primary_muscles(), "note": note})
 
     def get_name(self):
         return self.name
 
     def get_exercises(self):
         return self.exercises
+    
+    def set_exercises(self, exercises):
+        self.exercises = exercises
+
+    @staticmethod
+    def exercise_from_json(exercise_map, exercise_data=None):
+        return {
+            "exercise": exercise_map[exercise_data["exercise"]],
+            "sets": exercise_data["sets"],
+            "reps": exercise_data["reps"],
+            "muscles": exercise_map[exercise_data["exercise"]].get_primary_muscles(),
+            "note": exercise_data["note"]
+        }

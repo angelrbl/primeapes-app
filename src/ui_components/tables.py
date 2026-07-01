@@ -3,6 +3,7 @@ import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
+from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import get_muscle_list, get_exercise_list
 
@@ -58,7 +59,7 @@ def exercise_table(exercise):
     table_data = [
         {
             "Exercise": exercise.get_name().replace("_", " ").title(),
-            "Primary muscles": exercise.get_primary_muscles(),
+            "Primary muscles": exercise.get_primary_muscles_names(),
             "Secondary muscles": exercise.get_secondary_muscles()
         }
     ]
@@ -120,33 +121,101 @@ def workout_table(workout):
         return
     WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
 
-    exercises = workout.get_exercises()
-    #IF THERE ARE NO EXERCISES IN YOUR WORKOUT (IT IS A NEW WORKOUT), IT INITIALIZES AN EMPTY ENTRY SO THERE IS DATA ON TABLE_DATA
-    table_data = [
-        ({
-            "Exercises": exercise["exercise"].get_name().replace("_", " ").title(),
-            "Sets": exercise["sets"],
-            "Reps": exercise["reps"],
-            "Note": exercise["note"]
-        } for exercise in exercises) if len(exercises) != 0 else 
-        {   "Exercises": "",
-            "Sets": 3,
-            "Reps": "8-12",
-            "Note": ""
-        }
-    ]
+    user_exercises = get_exercise_list(user)
+    exercise_muscles_map = {ex.get_name(): ex.get_primary_muscles_names() for ex in user_exercises}
+    exercise_options = Exercise.to_name_list(user_exercises)
+
+    state_key = f"{workout.get_name()}_table_data"
+
+    if state_key not in st.session_state:
+        exercises = workout.get_exercises()
+
+        #IF THERE ARE NO EXERCISES IN YOUR WORKOUT (IT IS A NEW WORKOUT), IT INITIALIZES AN EMPTY ENTRY SO THERE IS DATA ON TABLE_DATA
+        if len(exercises) != 0:
+            table_data = [
+                {
+                    "exercise": item["exercise"].get_name(),
+                    "sets": item["sets"],
+                    "reps": item["reps"],
+                    "muscles": Muscle.to_name_list(item["muscles"]),
+                    "note": item["note"]
+                } for item in exercises
+            ]
+        else:
+            table_data = [
+                {   
+                    "exercise": None,
+                    "sets": 3,
+                    "reps": "8-12",
+                    "muscles": [],
+                    "note": ""
+                }
+            ]
+
+        st.session_state[state_key] = table_data
+
+
     edited_data = st.data_editor(
-        data=table_data, key=f"{workout.get_name()}_table", hide_index=True, num_rows="dynamic", 
+        data=st.session_state[state_key], key=f"{workout.get_name()}_table", hide_index=True, num_rows="dynamic", disabled=["muscles"],
         column_config={
-            "Exercises": st.column_config.SelectboxColumn(
-                "Exercises",
+            "exercise": st.column_config.SelectboxColumn(
+                "Exercise",
                 help="User's exercises",
-                options=Exercise.to_name_list(get_exercise_list(user)),
+                options=exercise_options,
                 format_func=lambda x: x.capitalize().replace("_", " "),
                 required=True,
                 default=None
             ),
-            "Sets": st.column_config.NumberColumn("Sets", min_value=1, step=1, default=3),
-            "Reps": st.column_config.TextColumn("Reps", default="8-12"),
-            "Note": st.column_config.TextColumn("Note", default="")
+            "sets": st.column_config.NumberColumn("Sets", min_value=1, step=1, default=3),
+            "reps": st.column_config.TextColumn("Reps", default="8-12"),
+            "muscles": st.column_config.MultiselectColumn(
+                "Muscles",
+                help="Exercise's primary muscles",
+                format_func=lambda x: x.capitalize().replace("_", " ") if x else ""
+            ),
+            "note": st.column_config.TextColumn("Note", default="")
     })
+
+    rerun_needed = False
+
+    if len(edited_data) != len(st.session_state[state_key]):
+        rerun_needed = True
+
+    for exercise in edited_data:
+        expected_muscles = exercise_muscles_map.get(exercise["exercise"], [])
+        if exercise["muscles"] != expected_muscles:
+            exercise["muscles"] = expected_muscles
+            rerun_needed = True
+
+    if rerun_needed:
+        st.session_state[state_key] = edited_data
+        st.rerun()
+
+    col1, col2 = st.columns(2, gap="small")
+    #SAVE
+    if col1.button("Save changes", icon=":material/save:", key="workout_save_button"):
+        with open(WORKOUTS_FILE, 'r') as f:
+            workouts_data = json.load(f)
+        exercise_map = {ex.get_name(): ex for ex in user_exercises}
+        edited_exercises = [
+            Workout.exercise_from_json(exercise_data=exercise_data, exercise_map=exercise_map) for exercise_data in edited_data
+        ]
+        workout.set_exercises(edited_exercises)
+
+        for i in range(len(workouts_data)):
+            if workout.get_name() == workouts_data[i]["name"]:
+                workouts_data[i] = workout.to_json()
+        with open(WORKOUTS_FILE, 'w') as f:
+            json.dump(workouts_data, f)
+    #DELETE
+    if col2.button("Delete workout", icon=":material/delete:", key="workout_delete_button"):
+        with open(WORKOUTS_FILE, 'r') as f:
+            workouts_data = json.load(f)
+        for workout_data in workouts_data:
+            if workout.get_name() == workout_data["name"]:
+                workouts_data.remove(workout_data)
+        with open(WORKOUTS_FILE, 'w') as f:
+            json.dump(workouts_data, f)    
+        if state_key in st.session_state:
+            del st.session_state[state_key]
+        st.rerun()
