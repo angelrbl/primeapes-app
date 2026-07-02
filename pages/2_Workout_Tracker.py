@@ -13,6 +13,7 @@ st.write("Please, select a workout or create a new one: ")
 
 workout = workout_select()
 if workout:
+    st.write(f"Showing your workout - **{workout.get_name().title().replace("_", " ")}**:")
     workout_table(workout)
     st.space("small")
     st.write("### Workout stats:")
