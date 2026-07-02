@@ -46,6 +46,19 @@ class Workout:
         self.exercises = exercises
 
     @staticmethod
+    def get_exercise_stat_value(exercise, stat):
+        value = exercise[stat]
+        if value is None:
+            return 0
+        
+        if stat == "reps" and type(value) == str:
+            digits = [int(x) for x in value.split("-")]
+            return sum(digits) // len(digits) if digits else 0
+        if type(value) == int:
+            return value
+        return 1
+
+    @staticmethod
     def exercise_from_json(exercise_map, exercise_data=None):
         return {
             "exercise": exercise_map[exercise_data["exercise"]],
