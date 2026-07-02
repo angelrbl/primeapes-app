@@ -33,6 +33,24 @@ class Workout:
                 } for exercise in self.exercises]
         }
 
+    def get_muscle_sets(self):
+        muscle_sets = {}
+        for exercise in self.exercises:
+            for muscle in exercise["muscles"]:
+                muscle_name = muscle.get_name().replace("_", " ").title()
+                if muscle_sets.get(muscle_name):
+                    muscle_sets[muscle_name] += exercise["sets"]
+                else:
+                    muscle_sets[muscle_name] = exercise["sets"]
+            secondary_muscles = exercise["exercise"].get_secondary_muscles()
+            for muscle in secondary_muscles:
+                muscle_name = muscle.get_name().replace("_", " ").title()
+                if muscle_sets.get(muscle_name):
+                    muscle_sets[muscle_name] += exercise["sets"] * 0.5
+                else:
+                    muscle_sets[muscle_name] = exercise["sets"] * 0.5
+        return muscle_sets
+
     def add_exercise(self, exercise, sets, reps, note):
         self.exercises.append({"exercise": exercise, "sets": sets, "reps": reps, "muscles": exercise.get_primary_muscles(), "note": note})
 

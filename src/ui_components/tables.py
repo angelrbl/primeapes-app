@@ -60,7 +60,7 @@ def exercise_table(exercise):
         {
             "Exercise": exercise.get_name().replace("_", " ").title(),
             "Primary muscles": exercise.get_primary_muscles_names(),
-            "Secondary muscles": exercise.get_secondary_muscles()
+            "Secondary muscles": exercise.get_secondary_muscles_names()
         }
     ]
 

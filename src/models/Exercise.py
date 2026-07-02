@@ -35,7 +35,10 @@ class Exercise:
         self.primary_muscles = muscles_list
 
     def get_secondary_muscles(self):
-        return Muscle.to_name_list(self.secondary_muscles)
+        return self.secondary_muscles
+
+    def get_secondary_muscles(self):
+        return self.secondary_muscles
     
     def set_secondary_muscles(self, muscles_list):
         self.secondary_muscles = muscles_list
