@@ -21,8 +21,8 @@ class Exercise:
     def to_json(self):
         return {
             "name": self.name,
-            "primary_muscles": self.get_primary_muscles(),
-            "secondary_muscles": self.get_secondary_muscles()
+            "primary_muscles": self.get_primary_muscles_names(),
+            "secondary_muscles": self.get_secondary_muscles_names()
         }
 
     def get_primary_muscles_names(self):
@@ -37,8 +37,8 @@ class Exercise:
     def get_secondary_muscles(self):
         return self.secondary_muscles
 
-    def get_secondary_muscles(self):
-        return self.secondary_muscles
+    def get_secondary_muscles_names(self):
+        return Muscle.to_name_list(self.secondary_muscles)
     
     def set_secondary_muscles(self, muscles_list):
         self.secondary_muscles = muscles_list

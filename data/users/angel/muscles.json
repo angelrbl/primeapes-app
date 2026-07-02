@@ -1,1 +1,27 @@
-[{"name": "pec", "categories": ["upper"]}, {"name": "back", "categories": []}, {"name": "shoulder", "categories": ["upper", "lower"]}]
+[
+    {
+        "name": "pec",
+        "categories": [
+            "upper"
+        ]
+    },
+    {
+        "name": "back",
+        "categories": []
+    },
+    {
+        "name": "shoulder",
+        "categories": [
+            "upper",
+            "lower"
+        ]
+    },
+    {
+        "name": "biceps",
+        "categories": [
+            "arm",
+            "upper",
+            "pull"
+        ]
+    }
+]
