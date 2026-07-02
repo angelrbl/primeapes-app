@@ -5,7 +5,12 @@ def workout_total_stat_card(workout, stat, unit=""):
     exercises = workout.get_exercises()
 
     if not exercises:
-        st.metric(label=stat.title(), value=0)
+        st.metric(
+            label=f"{stat.title()} ({unit})" if unit else stat.title(),
+            value=0,
+            border=True
+        )
+        return
 
     if stat not in exercises[0]:
         st.error(f"The stat {stat} does not exist on the exercises.")
