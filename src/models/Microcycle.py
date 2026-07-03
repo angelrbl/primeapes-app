@@ -17,7 +17,6 @@ class Microcycle:
             "length": self.length,
             "workouts": self.workouts
         }
-        
 
     def add_workout(self, workout, day_index):
         self.workouts[day_index] = workout

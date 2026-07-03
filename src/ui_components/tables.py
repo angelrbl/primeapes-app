@@ -5,7 +5,7 @@ from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_muscle_list, get_exercise_list
+from src.utils.database import *
 
 def muscle_table(muscle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -49,7 +49,7 @@ def muscle_table(muscle):
                 muscles_data.remove(muscle_json)
         with open(MUSCLES_FILE, 'w') as f:
             json.dump(muscles_data, f)
-        st.rerun()
+            st.rerun()
 
 def exercise_table(exercise):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -110,7 +110,7 @@ def exercise_table(exercise):
                 exercises_data.remove(exercise_data)
         with open(EXERCISES_FILE, 'w') as f:
             json.dump(exercises_data, f)    
-        st.rerun() 
+            st.rerun() 
 
 def workout_table(workout):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -218,4 +218,13 @@ def workout_table(workout):
             json.dump(workouts_data, f)    
         if state_key in st.session_state:
             del st.session_state[state_key]
-        st.rerun()
+            st.rerun()
+
+def microcycle_table(microcycle):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if not microcycle:
+        return
+    if len(get_workout_list(user)) == 0:
+        st.warning("There are no workouts to build a microcycle with, please, create some exercises first.")
+        return
+    MICROCYCLE_FILE = check_file(f"{user.get_folder()}/microcycles.json")

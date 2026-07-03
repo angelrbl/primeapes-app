@@ -1,1 +1,1 @@
-[{"name": "back", "categories": ["upper", "posterior_chain", "pull"]}, {"name": "pec", "categories": ["push", "upper"]}]
+[{"name": "back", "categories": ["upper", "posterior_chain", "pull"]}, {"name": "pec", "categories": ["push", "upper"]}, {"name": "shoulder", "categories": []}, {"name": "biceps", "categories": ["arm", "upper", "pull"]}, {"name": "triceps", "categories": ["upper", "arm", "push"]}, {"name": "quadriceps", "categories": []}, {"name": "hamstrings", "categories": []}, {"name": "abs", "categories": []}, {"name": "calves", "categories": []}]

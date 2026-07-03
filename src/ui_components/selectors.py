@@ -23,6 +23,7 @@ def muscle_select():
             muscles_data.append(muscle.to_json())
             with open(MUSCLES_FILE, "w") as f:
                 json.dump(muscles_data, f)
+                st.rerun()
         else:
             for muscle_json in muscles_data:
                 if muscle_json["name"] == muscle_name.lower().replace(" ", "_"):
@@ -46,6 +47,7 @@ def exercise_select():
             exercises_data.append(exercise.to_json())
             with open(EXERCISES_FILE, "w") as f:
                 json.dump(exercises_data, f)
+                st.rerun()
         else:
             user_muscles = get_muscle_list(user=user)
             muscle_map = {m.get_name(): m for m in user_muscles}
@@ -71,6 +73,7 @@ def workout_select():
             workouts_data.append(workout.to_json())
             with open(WORKOUTS_FILE, "w") as f:
                 json.dump(workouts_data, f)
+                st.rerun()
         else:
             user_exercises = get_exercise_list(user=user)
             exercise_map = {e.get_name(): e for e in user_exercises}
@@ -79,3 +82,5 @@ def workout_select():
                     workout = Workout.from_json(workout_data, exercise_map)
                     return workout
     return workout
+
+#IDEA st.session_state para recordar el índice y si es nuevo el indice es len(x_names) para así que index=st.session_state y evitar bug

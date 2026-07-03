@@ -2,6 +2,7 @@ import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
+from src.models.Workout import Workout
 
 def get_muscle_list(user):
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
@@ -13,12 +14,23 @@ def get_muscle_list(user):
     return muscle_list
 
 def get_exercise_list(user):
-    EXERCISE_FILE = check_file(f"{user.get_folder()}/exercises.json")
+    EXERCISES_FILE = check_file(f"{user.get_folder()}/exercises.json")
     user_muscles = get_muscle_list(user)
     muscle_map = {m.get_name(): m for m in user_muscles}
     exercise_list = []
-    with open(EXERCISE_FILE, "r") as f:
+    with open(EXERCISES_FILE, "r") as f:
         exercises_data = json.load(f)
     for exercise in exercises_data:
         exercise_list.append(Exercise.from_json(exercise, muscle_map))
     return exercise_list
+
+def get_workout_list(user):
+    WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
+    user_exercises = get_exercise_list(user)
+    exercise_map = {ex.get_name(): ex for ex in user_exercises}
+    workout_list = []
+    with open(WORKOUTS_FILE, "r") as f:
+        workouts_data = json.load(f)
+    for workout in workouts_data:
+        workout_list.append(Workout.from_json(workout, exercise_map))
+    return workout_list
