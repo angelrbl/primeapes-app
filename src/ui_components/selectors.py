@@ -4,8 +4,21 @@ from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
+from src.models.Macrocycle import Macrocycle
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_muscle_list, get_exercise_list
+from src.utils.database import get_muscle_list, get_exercise_list, get_microcycle_list
+
+if "muscle_index" not in st.session_state:
+    st.session_state["muscle_index"] = None
+
+if "exercise_index" not in st.session_state:
+    st.session_state["exercise_index"] = None
+
+if "workout_index" not in st.session_state:
+    st.session_state["workout_index"] = None
+
+if "macrocycle_index" not in st.session_state:
+    st.session_state["macrocycle_index"] = None
 
 def muscle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -14,7 +27,11 @@ def muscle_select():
         muscles_data = json.load(f)
     muscle_names = [muscle_data["name"].title().replace("_", " ") for muscle_data in muscles_data]
 
-    muscle_name = st.selectbox(label="Muscle", index=None, accept_new_options=True, options=muscle_names)
+    muscle_name = st.selectbox(
+        label="Muscle",
+        index=st.session_state["muscle_index"] if st.session_state["muscle_index"] else None,
+        accept_new_options=True,
+        options=muscle_names)
 
     muscle = None
     if muscle_name:
@@ -23,11 +40,13 @@ def muscle_select():
             muscles_data.append(muscle.to_json())
             with open(MUSCLES_FILE, "w") as f:
                 json.dump(muscles_data, f)
+                st.session_state["muscle_index"] = len(muscle_names)
                 st.rerun()
         else:
             for muscle_json in muscles_data:
                 if muscle_json["name"] == muscle_name.lower().replace(" ", "_"):
                     muscle = Muscle.from_json(muscle_json)
+                    st.session_state["muscle_index"] = muscle_names.index(muscle_name)
                     return muscle
     return muscle
 
@@ -38,7 +57,11 @@ def exercise_select():
         exercises_data = json.load(f)
     exercise_names = [exercise_data["name"].title().replace("_", " ") for exercise_data in exercises_data]
 
-    exercise_name = st.selectbox(label="Exercise", index=None, accept_new_options=True, options=exercise_names)
+    exercise_name = st.selectbox(
+        label="Exercise",
+        index=st.session_state["exercise_index"] if st.session_state["exercise_index"] else None,
+        accept_new_options=True,
+        options=exercise_names)
 
     exercise = None
     if exercise_name:
@@ -47,6 +70,7 @@ def exercise_select():
             exercises_data.append(exercise.to_json())
             with open(EXERCISES_FILE, "w") as f:
                 json.dump(exercises_data, f)
+                st.session_state["exercise_index"] = len(exercise_names)
                 st.rerun()
         else:
             user_muscles = get_muscle_list(user=user)
@@ -54,6 +78,7 @@ def exercise_select():
             for exercise_data in exercises_data:
                 if exercise_data["name"] == exercise_name.lower().replace(" ", "_"):
                     exercise = Exercise.from_json(exercise_data, muscle_map)
+                    st.session_state["exercise_index"] = exercise_names.index(exercise_name)
                     return exercise
     return exercise
 
@@ -64,7 +89,12 @@ def workout_select():
         workouts_data = json.load(f)
     workout_names = [workout_data["name"].replace("_", " ").title() for workout_data in workouts_data]
 
-    workout_name = st.selectbox(label="Workout", index=None, accept_new_options=True, options=workout_names)
+    workout_name = st.selectbox(
+        label="Workout",
+        index=st.session_state["workout_index"] if st.session_state["workout_index"] else None,
+        accept_new_options=True,
+        options=workout_names)
+
 
     workout = None
     if workout_name:
@@ -73,14 +103,41 @@ def workout_select():
             workouts_data.append(workout.to_json())
             with open(WORKOUTS_FILE, "w") as f:
                 json.dump(workouts_data, f)
+                st.session_state["workout_index"] = len(workout_names)
                 st.rerun()
         else:
             user_exercises = get_exercise_list(user=user)
-            exercise_map = {e.get_name(): e for e in user_exercises}
+            exercise_map = {ex.get_name(): ex for ex in user_exercises}
             for workout_data in workouts_data:
                 if workout_data["name"] == workout_name.lower().replace(" ", "_"):
                     workout = Workout.from_json(workout_data, exercise_map)
+                    st.session_state["workout_index"] = workout_names.index(workout_name)
                     return workout
     return workout
 
 #IDEA st.session_state para recordar el índice y si es nuevo el indice es len(x_names) para así que index=st.session_state y evitar bug
+
+def macrocycle_select():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
+    with open(MACROCYCLES_FILE, "r") as f:
+        macrocycles_data = json.load(f)
+    macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
+    macrocycle_name = st.selectbox(
+        label="Macrocycle",
+        index=st.session_state["macrocycle_index"] if st.session_state["macrocycle_index"] else None,
+        accept_new_options=False,
+        options=macrocycle_names
+    )
+
+    macrocycle = None
+    if macrocycle_name:
+        user_microcycles = get_microcycle_list(user=user)
+        microcycle_map = {mic.get_id(): mic for mic in user_microcycles}
+        for macrocycles_data in macrocycles_data:
+            if macrocycles_data["name"] == macrocycles_data.lower().replace(" ", "_"):
+                macrocycle = Macrocycle.from_json(macrocycles_data, microcycle_map)
+                st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
+                return macrocycle
+    return macrocycle
+

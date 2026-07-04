@@ -31,7 +31,7 @@ def muscle_table(muscle):
 
     col1, col2 = st.columns(2, gap="small")
     #SAVE
-    if col1.button("Save changes", icon=":material/save:", key="muscle_save_button"):
+    if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
         with open(MUSCLES_FILE, 'r') as f:
             muscles_data = json.load(f)
         muscle.set_categories(edited_data[0]["Categories"])
@@ -41,7 +41,7 @@ def muscle_table(muscle):
         with open(MUSCLES_FILE, 'w') as f:
             json.dump(muscles_data, f)
     #DELETE
-    if col2.button("Delete muscle", icon=":material/delete:", key="muscle_delete_button"):
+    if col2.button("Delete muscle", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
         with open(MUSCLES_FILE, 'r') as f:
             muscles_data = json.load(f)
         for muscle_json in muscles_data:
@@ -84,7 +84,7 @@ def exercise_table(exercise):
 
     col1, col2 = st.columns(2, gap="small")
     #SAVE
-    if col1.button("Save changes", icon=":material/save:", key="exercise_save_button"):
+    if col1.button("Save changes", icon=":material/save:", key="exercise_save_button", width="stretch"):
         with open(EXERCISES_FILE, 'r') as f:
             exercises_data = json.load(f)
 
@@ -102,7 +102,7 @@ def exercise_table(exercise):
         with open(EXERCISES_FILE, 'w') as f:
             json.dump(exercises_data, f)
     #DELETE
-    if col2.button("Delete exercise", icon=":material/delete:", key="exercise_delete_button"):
+    if col2.button("Delete exercise", icon=":material/delete:", key="exercise_delete_button", width="stretch"):
         with open(EXERCISES_FILE, 'r') as f:
             exercises_data = json.load(f)
         for exercise_data in exercises_data:
@@ -191,9 +191,9 @@ def workout_table(workout):
         st.session_state[state_key] = edited_data
         st.rerun()
 
-    col1, col2 = st.columns(2, gap="small")
+    col1, col2 = st.columns(2)
     #SAVE
-    if col1.button("Save changes", icon=":material/save:", key="workout_save_button"):
+    if col1.button("Save changes", icon=":material/save:", key="workout_save_button", width="stretch"):
         with open(WORKOUTS_FILE, 'r') as f:
             workouts_data = json.load(f)
         exercise_map = {ex.get_name(): ex for ex in user_exercises}
@@ -208,7 +208,7 @@ def workout_table(workout):
         with open(WORKOUTS_FILE, 'w') as f:
             json.dump(workouts_data, f)
     #DELETE
-    if col2.button("Delete workout", icon=":material/delete:", key="workout_delete_button"):
+    if col2.button("Delete workout", icon=":material/delete:", key="workout_delete_button", width="stretch"):
         with open(WORKOUTS_FILE, 'r') as f:
             workouts_data = json.load(f)
         for workout_data in workouts_data:

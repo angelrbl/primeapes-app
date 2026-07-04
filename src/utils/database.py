@@ -3,6 +3,7 @@ from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
+from src.models.Microcycle import Microcycle
 
 def get_muscle_list(user):
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
@@ -34,3 +35,14 @@ def get_workout_list(user):
     for workout in workouts_data:
         workout_list.append(Workout.from_json(workout, exercise_map))
     return workout_list
+
+def get_microcycle_list(user):
+    MICROCYCLES_LIST = check_file(f"{user.get_folder()}/microcycles.json")
+    user_workouts = get_workout_list(user)
+    workout_map = {wrk.get_name(): wrk for wrk in user_workouts}
+    microcycle_list = []
+    with open(MICROCYCLES_LIST, "r") as f:
+        microcycles_data = json.load(f)
+    for microcycle in microcycles_data:
+        microcycle_list.append(Microcycle.from_json(microcycle, workout_map))
+    return microcycle_list
