@@ -1,10 +1,10 @@
 class Macrocycle:
-    def __init__(self, name, start_date, description, length, microcycles = None):
+    def __init__(self, name, start_date, description, length, microcycles = []):
         self.name = name
         self.start_date = start_date
         self.description = description
         self.length = length
-        self.microcycles = microcycles if microcycles else [None * length]
+        self.microcycles = microcycles
 
     def __repr__(self):
         return f"<Macrocycle {self.name}>"

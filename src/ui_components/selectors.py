@@ -135,7 +135,7 @@ def macrocycle_select():
         user_microcycles = get_microcycle_list(user=user)
         microcycle_map = {mic.get_id(): mic for mic in user_microcycles}
         for macrocycles_data in macrocycles_data:
-            if macrocycles_data["name"] == macrocycles_data.lower().replace(" ", "_"):
+            if macrocycles_data["name"] == macrocycle_name.lower().replace(" ", "_"):
                 macrocycle = Macrocycle.from_json(macrocycles_data, microcycle_map)
                 st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
