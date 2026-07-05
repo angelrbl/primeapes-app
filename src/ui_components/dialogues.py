@@ -1,7 +1,7 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
 from src.utils.files import check_file
-import json
+from src.utils.database import save_json_data, load_json_data
 
 @st.dialog("Create new user", dismissible=False)
 def new_user_dialog():
@@ -17,7 +17,7 @@ def new_user_dialog():
 
 @st.dialog("Add new macrocycle")
 def add_macrocycle_dialog():
-    col1, col2 = st.columns([0.8, 0.2])
+    col1, col2 = st.columns([0.7, 0.3])
     name = col1.text_input(label="Name", placeholder="Macrocycle name", key="add_macrocycle_name")
     start_date = col2.date_input(label="Starting date", value="today", key="add_macrocycle_start_date")
     description = st.text_area(label="Description", placeholder="A description for your macrocycle", key="add_¨macrocycle_description")
@@ -27,14 +27,11 @@ def add_macrocycle_dialog():
         if not name:
             st.error("Please, introduce a name for your Macrocycle.")
         else:
-            # FUTURO SAVE_CHANGES GENERALIZADO??
             user = st.session_state["user"]
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
-            with open(MACROCYCLES_FILE, "r") as f:
-                macrocycles_data = json.load(f)
+            macrocycles_data = load_json_data(MACROCYCLES_FILE)
             macrocycle = Macrocycle(name=name, start_date=start_date, description=description, length=length)
             macrocycles_data.append(macrocycle.to_json())
-            with open(MACROCYCLES_FILE, "w") as f:
-                json.dump(macrocycles_data, f, default=str)
+            if save_json_data(MACROCYCLES_FILE, macrocycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1
                 st.rerun()

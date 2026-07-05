@@ -7,6 +7,7 @@ from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import *
 
+
 def muscle_table(muscle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     if not muscle:
@@ -32,23 +33,20 @@ def muscle_table(muscle):
     col1, col2 = st.columns(2, gap="small")
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
-        with open(MUSCLES_FILE, 'r') as f:
-            muscles_data = json.load(f)
+        muscles_data = load_json_data(MUSCLES_FILE)
         muscle.set_categories(edited_data[0]["Categories"])
         for i in range(len(muscles_data)):
             if muscle.get_name() == muscles_data[i]["name"]:
                 muscles_data[i] = muscle.to_json()
-        with open(MUSCLES_FILE, 'w') as f:
-            json.dump(muscles_data, f)
+        save_json_data(MUSCLES_FILE, muscles_data)
     #DELETE
     if col2.button("Delete muscle", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
-        with open(MUSCLES_FILE, 'r') as f:
-            muscles_data = json.load(f)
+        muscles_data = load_json_data(MUSCLES_FILE)
         for muscle_json in muscles_data:
             if muscle.get_name() == muscle_json["name"]:
                 muscles_data.remove(muscle_json)
-        with open(MUSCLES_FILE, 'w') as f:
-            json.dump(muscles_data, f)
+        if save_json_data(MUSCLES_FILE, muscles_data):
+            st.session_state["muscle_index"] = None
             st.rerun()
 
 def exercise_table(exercise):
@@ -85,8 +83,7 @@ def exercise_table(exercise):
     col1, col2 = st.columns(2, gap="small")
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="exercise_save_button", width="stretch"):
-        with open(EXERCISES_FILE, 'r') as f:
-            exercises_data = json.load(f)
+        exercises_data = load_json_data(EXERCISES_FILE)
 
         user_muscles = get_muscle_list(user)
         muscle_map = {m.get_name(): m for m in user_muscles}
@@ -99,17 +96,15 @@ def exercise_table(exercise):
         for i in range(len(exercises_data)):
             if exercise.get_name() == exercises_data[i]["name"]:
                 exercises_data[i] = exercise.to_json()
-        with open(EXERCISES_FILE, 'w') as f:
-            json.dump(exercises_data, f)
+        save_json_data(EXERCISES_FILE, exercises_data)
     #DELETE
     if col2.button("Delete exercise", icon=":material/delete:", key="exercise_delete_button", width="stretch"):
-        with open(EXERCISES_FILE, 'r') as f:
-            exercises_data = json.load(f)
+        exercises_data = load_json_data(EXERCISES_FILE)
         for exercise_data in exercises_data:
             if exercise.get_name() == exercise_data["name"]:
                 exercises_data.remove(exercise_data)
-        with open(EXERCISES_FILE, 'w') as f:
-            json.dump(exercises_data, f)    
+        if save_json_data(EXERCISES_FILE, exercises_data):
+            st.session_state["exercise_index"] = None
             st.rerun() 
 
 def workout_table(workout):
@@ -194,8 +189,7 @@ def workout_table(workout):
     col1, col2 = st.columns(2)
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="workout_save_button", width="stretch"):
-        with open(WORKOUTS_FILE, 'r') as f:
-            workouts_data = json.load(f)
+        workouts_data = load_json_data(WORKOUTS_FILE)
         exercise_map = {ex.get_name(): ex for ex in user_exercises}
         edited_exercises = [
             Workout.exercise_from_json(exercise_data=exercise_data, exercise_map=exercise_map) for exercise_data in edited_data
@@ -205,19 +199,17 @@ def workout_table(workout):
         for i in range(len(workouts_data)):
             if workout.get_name() == workouts_data[i]["name"]:
                 workouts_data[i] = workout.to_json()
-        with open(WORKOUTS_FILE, 'w') as f:
-            json.dump(workouts_data, f)
+        save_json_data(WORKOUTS_FILE, workouts_data)
     #DELETE
     if col2.button("Delete workout", icon=":material/delete:", key="workout_delete_button", width="stretch"):
-        with open(WORKOUTS_FILE, 'r') as f:
-            workouts_data = json.load(f)
+        workouts_data = load_json_data(WORKOUTS_FILE)
         for workout_data in workouts_data:
             if workout.get_name() == workout_data["name"]:
                 workouts_data.remove(workout_data)
-        with open(WORKOUTS_FILE, 'w') as f:
-            json.dump(workouts_data, f)    
+        save_json_data(WORKOUTS_FILE, workouts_data)
         if state_key in st.session_state:
             del st.session_state[state_key]
+            st.session_state["workout_index"] = None
             st.rerun()
 
 def microcycle_table(microcycle):

@@ -46,3 +46,14 @@ def get_microcycle_list(user):
     for microcycle in microcycles_data:
         microcycle_list.append(Microcycle.from_json(microcycle, workout_map))
     return microcycle_list
+
+def load_json_data(file_path):
+    with open(file_path, 'r') as f:
+            file_data = json.load(f)
+    return file_data
+
+def save_json_data(file_path, file_data):
+    with open(file_path, 'w') as f:
+        json.dump(file_data, f, default=str)
+        return True
+    return False

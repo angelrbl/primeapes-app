@@ -6,7 +6,7 @@ from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.models.Macrocycle import Macrocycle
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_muscle_list, get_exercise_list, get_microcycle_list
+from src.utils.database import *
 
 if "muscle_index" not in st.session_state:
     st.session_state["muscle_index"] = None
@@ -23,8 +23,7 @@ if "macrocycle_index" not in st.session_state:
 def muscle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
-    with open(MUSCLES_FILE, "r") as f:
-        muscles_data = json.load(f)
+    muscles_data = load_json_data(MUSCLES_FILE)
     muscle_names = [muscle_data["name"].title().replace("_", " ") for muscle_data in muscles_data]
 
     muscle_name = st.selectbox(
@@ -38,8 +37,7 @@ def muscle_select():
         if muscle_name not in muscle_names:
             muscle = Muscle(name=muscle_name.lower().replace(" ", "_"))
             muscles_data.append(muscle.to_json())
-            with open(MUSCLES_FILE, "w") as f:
-                json.dump(muscles_data, f)
+            if save_json_data(MUSCLES_FILE, muscles_data):
                 st.session_state["muscle_index"] = len(muscle_names)
                 st.rerun()
         else:
@@ -53,8 +51,7 @@ def muscle_select():
 def exercise_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     EXERCISES_FILE = check_file(f"{user.get_folder()}/exercises.json")
-    with open(EXERCISES_FILE, "r") as f:
-        exercises_data = json.load(f)
+    exercises_data = load_json_data(EXERCISES_FILE)
     exercise_names = [exercise_data["name"].title().replace("_", " ") for exercise_data in exercises_data]
 
     exercise_name = st.selectbox(
@@ -68,8 +65,7 @@ def exercise_select():
         if exercise_name not in exercise_names:
             exercise = Exercise(name=exercise_name.lower().replace(" ", "_"))
             exercises_data.append(exercise.to_json())
-            with open(EXERCISES_FILE, "w") as f:
-                json.dump(exercises_data, f)
+            if save_json_data(EXERCISES_FILE, exercises_data):
                 st.session_state["exercise_index"] = len(exercise_names)
                 st.rerun()
         else:
@@ -85,8 +81,7 @@ def exercise_select():
 def workout_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
-    with open(WORKOUTS_FILE, "r") as f:
-        workouts_data = json.load(f)
+    workouts_data = load_json_data(WORKOUTS_FILE)
     workout_names = [workout_data["name"].replace("_", " ").title() for workout_data in workouts_data]
 
     workout_name = st.selectbox(
@@ -101,8 +96,7 @@ def workout_select():
         if workout_name not in workout_names:
             workout = Workout(name=workout_name.lower().replace(" ", "_"))
             workouts_data.append(workout.to_json())
-            with open(WORKOUTS_FILE, "w") as f:
-                json.dump(workouts_data, f)
+            if save_json_data(WORKOUTS_FILE, workouts_data):
                 st.session_state["workout_index"] = len(workout_names)
                 st.rerun()
         else:
@@ -115,13 +109,10 @@ def workout_select():
                     return workout
     return workout
 
-#IDEA st.session_state para recordar el índice y si es nuevo el indice es len(x_names) para así que index=st.session_state y evitar bug
-
 def macrocycle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
-    with open(MACROCYCLES_FILE, "r") as f:
-        macrocycles_data = json.load(f)
+    macrocycles_data = load_json_data(MACROCYCLES_FILE)
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
     macrocycle_name = st.selectbox(
         label="Macrocycle",

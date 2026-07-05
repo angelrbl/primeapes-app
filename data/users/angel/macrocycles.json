@@ -1,1 +1,1 @@
-[{"name": "Mola", "start_date": "2026-07-05", "description": "", "length": 1, "microcycles": []}, {"name": "No mola", "start_date": "2026-07-13", "description": "desrfae", "length": 2, "microcycles": []}]
+[{"name": "Mola", "start_date": "2026-07-05", "description": "", "length": 1, "microcycles": []}, {"name": "No mola", "start_date": "2026-07-13", "description": "desrfae", "length": 2, "microcycles": []}, {"name": "Deja de molar", "start_date": "2026-07-05", "description": "Este macrociclo ha dejado de molar", "length": 7, "microcycles": []}]
