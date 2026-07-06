@@ -2,6 +2,8 @@ import streamlit as st
 from src.models.Macrocycle import Macrocycle
 from src.utils.files import check_file
 from src.utils.database import save_json_data, load_json_data
+from src.utils.auth import delete_user
+from src.ui_components.selectors import user_select
 
 @st.dialog("Create new user", dismissible=False)
 def new_user_dialog():
@@ -14,6 +16,17 @@ def new_user_dialog():
         else:
             st.session_state["new_user_data"] = {"name": name, "weight": weight, "height": height}
             st.rerun()
+
+@st.dialog("Manage users")
+def manage_users_dialog():
+    col1, col2 = st.columns([0.1, 0.9])
+    col1.write("**@**")
+    with col2:
+        user = user_select()
+    st.write(f"Do you want to delete the user **@{user.get_id()}** and all its folders and data?")
+    if st.button(label="Delete user", key="delete_user_button", icon=":material/delete:", type="primary"):
+        delete_user(user)
+        st.toast(f"You deleted all the data of **@{user.get_id()}**", duration="short")
 
 @st.dialog("Add new macrocycle")
 def add_macrocycle_dialog():

@@ -1,10 +1,10 @@
 import streamlit as st
-import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.models.Macrocycle import Macrocycle
+from src.models.User import User
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import *
 
@@ -132,3 +132,21 @@ def macrocycle_select():
                 return macrocycle
     return macrocycle
 
+def user_select():
+    USERS_FILE = check_file("data/users.json")
+    users_data = load_json_data(USERS_FILE)
+    user_ids = [user_data["user_id"] for user_data in users_data]
+    user_id = st.selectbox(
+        label="User",
+        index=None,
+        accept_new_options=False,
+        options=user_ids
+    )
+
+    user = None
+    if user_id:
+        for user_data in users_data:
+            if user_data["user_id"] == user_id:
+                user = User.from_json(user_data)
+                return user
+    return user

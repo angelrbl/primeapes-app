@@ -1,6 +1,6 @@
 import streamlit as st
 from src.utils.auth import *
-from src.ui_components.dialogues import new_user_dialog
+from src.ui_components.dialogues import new_user_dialog, manage_users_dialog
 
 def log_in():
     #LOG IN
