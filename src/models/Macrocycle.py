@@ -1,10 +1,11 @@
 class Macrocycle:
-    def __init__(self, name, start_date, description, length, microcycles = []):
+    def __init__(self, name, start_date, description, length, microcycle_length, microcycles = []):
         self.name = name
         self.start_date = start_date
         self.description = description
         self.length = length
         self.microcycles = microcycles
+        self.microcycle_length = microcycle_length
 
     def __repr__(self):
         return f"<Macrocycle {self.name}>"
@@ -13,7 +14,14 @@ class Macrocycle:
     def from_json(cls, data_dict, microcycle_map):
         microcycle_ids = data_dict["microcycles"]
         microcycles = [microcycle_map[microcycle_id] for microcycle_id in microcycle_ids]
-        return cls(name=data_dict["name"], start_date=data_dict["start_date"], description=data_dict["description"], length=data_dict["length"], microcycles=microcycles)
+        return cls(
+            name=data_dict["name"],
+            start_date=data_dict["start_date"],
+            description=data_dict["description"],
+            length=data_dict["length"],
+            microcycle_length=data_dict["microcycle_length"],
+            microcycles=microcycles
+            )
     
     def to_json(self):
         return {
@@ -21,8 +29,18 @@ class Macrocycle:
             "start_date": self.start_date,
             "description": self.description,
             "length": self.length,
-            "microcycles": [microcycle.get_id() for microcycle in self.microcycles]
+            "microcycles": [microcycle.get_id() for microcycle in self.microcycles],
+            "microcycle_length": self.microcycle_length
         }
 
     def add_microcycle(self, microcycle_index, microcycle):
         self.microcycles[microcycle_index] = microcycle
+
+    def get_description(self):
+        return self.description
+    
+    def get_date(self):
+        return self.start_date
+    
+    def get_name(self):
+        return self.name

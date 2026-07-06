@@ -14,3 +14,15 @@ with col1:
     macrocycle = macrocycle_select()
 with col2:
     st.button("Add new", on_click=add_macrocycle_dialog)
+
+if not macrocycle:
+   st.stop()
+
+# Show basic data from your macrocycle
+col1, col2 = st.columns([0.7, 0.3])
+col1.write(f"###### Showing - {macrocycle.get_name().title().replace("_", " ")}")
+col2.write(f"###### Starting date: {macrocycle.get_date()}")
+description = macrocycle.get_description()
+if description:
+    with st.expander(label="Description"):
+        st.write(description)

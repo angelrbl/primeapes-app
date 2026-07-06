@@ -21,16 +21,23 @@ def add_macrocycle_dialog():
     name = col1.text_input(label="Name", placeholder="Macrocycle name", key="add_macrocycle_name")
     start_date = col2.date_input(label="Starting date", value="today", key="add_macrocycle_start_date")
     description = st.text_area(label="Description", placeholder="A description for your macrocycle", key="add_¨macrocycle_description")
-    length = st.number_input(label="Lenght", placeholder="Num of microcycles in your plan", min_value=1, key="add_macrocycle_length")
+    col1, col2 = st.columns(2)
+    macrocycle_length = col1.number_input(label="Macrochycle length", placeholder="Num of microcycles in your plan", value=None, min_value=1, key="add_macrocycle_length")
+    microcycle_length = col2.number_input(label="Microcycle length", placeholder="Num of days in a microcycle", value=None, min_value=1, key="add_microcycle_length")
 
     if st.button("Add macrocycle", width="stretch"):
-        if not name:
-            st.error("Please, introduce a name for your Macrocycle.")
+        if not (name and microcycle_length and macrocycle_length):
+            st.error("Missing essential info to create your Macrocycle.")
         else:
             user = st.session_state["user"]
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
             macrocycles_data = load_json_data(MACROCYCLES_FILE)
-            macrocycle = Macrocycle(name=name, start_date=start_date, description=description, length=length)
+            macrocycle = Macrocycle(
+                name=name.lower().replace(" ", "_"),
+                start_date=start_date,
+                description=description,
+                length=macrocycle_length,
+                microcycle_length=microcycle_length)
             macrocycles_data.append(macrocycle.to_json())
             if save_json_data(MACROCYCLES_FILE, macrocycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1

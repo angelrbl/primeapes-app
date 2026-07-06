@@ -12,18 +12,20 @@ st.title("Workout Tracker")
 st.write("Please, select a workout or create a new one: ")
 
 workout = workout_select()
-if workout:
-    st.write(f"Showing your workout - **{workout.get_name().title().replace("_", " ")}**:")
-    workout_table(workout)
-    st.space("small")
-    st.write("### Workout stats:")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        workout_total_stat_card(workout=workout, stat="exercise")
-    with col2:
-        workout_total_stat_card(workout=workout, stat="sets")
-    with col3:
-        workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
+if not workout:
+    st.stop()
+
+st.write(f"Showing your workout - **{workout.get_name().title().replace("_", " ")}**:")
+workout_table(workout)
+st.space("small")
+st.write("### Workout stats:")
+col1, col2, col3 = st.columns(3)
+with col1:
+    workout_total_stat_card(workout=workout, stat="exercise")
+with col2:
+    workout_total_stat_card(workout=workout, stat="sets")
+with col3:
+    workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
     
-    workout_volume_chart(workout)
+workout_volume_chart(workout)
     
