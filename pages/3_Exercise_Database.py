@@ -13,6 +13,8 @@ st.write("Please, select an exercise or create a new one: ")
 exercise = exercise_select()
 exercise_table(exercise)
 
+st.divider()
+
 # MUSCLES
 st.title("Muscle Database")
 st.write("Please, select a muscle or create a new one: ")

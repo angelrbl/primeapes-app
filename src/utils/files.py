@@ -21,3 +21,9 @@ def check_file(FILE_PATH):
         with open(FILE_PATH, "w") as f:
             json.dump([], f)
     return FILE_PATH
+
+def delete_folder(FILE_PATH):
+    if os.path.exists(FILE_PATH):
+        shutil.rmtree(FILE_PATH)
+        return True
+    return False  

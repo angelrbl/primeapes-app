@@ -1,6 +1,6 @@
 import hashlib
 import json
-from src.utils.files import initialize_user_folders, check_file
+from src.utils.files import initialize_user_folders, check_file, delete_folder
 from src.models.User import User
 from src.utils.database import load_json_data, save_json_data
 
@@ -47,10 +47,18 @@ def initialize_user(user_id):
 
 def delete_user(user):
     USER_FILE = check_file("data/users.json")
+    CREDENTIALS_FILE = check_file("data/user_credentials.json")
+    USER_FOLDER = f"data/users/{user.get_id()}"
     users_data = load_json_data(USER_FILE)
+    with open(CREDENTIALS_FILE, 'r') as f:
+        credentials = json.load(f)
+        del credentials[user.get_id()]
+    with open(CREDENTIALS_FILE, "w") as f:
+        json.dump(credentials, f)
     for user_data in users_data:
-        if user_data["user_id"] == user.get_id:
+        if user_data["user_id"] == user.get_id():
             users_data.remove(user_data)
             if save_json_data(USER_FILE, users_data):
+                delete_folder(USER_FOLDER)
                 return True
     return False

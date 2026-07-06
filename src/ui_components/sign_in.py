@@ -1,6 +1,5 @@
 import streamlit as st
 from src.utils.auth import *
-from src.ui_components.dialogues import new_user_dialog, manage_users_dialog
 
 def log_in():
     #LOG IN
@@ -35,8 +34,9 @@ def log_in():
             if st.button("Create account", key="create_account_button"):
                 if new_username and new_password:
                     if create_user_account(username=new_username, password=new_password):
-                        st.session_state["new_user_data"] = False
-                        if not st.session_state["new_user_data"]:
+                        st.session_state["new_user_data"] = None
+                        if not st.session_state["new_user_data"]:   
+                            from src.ui_components.dialogues import new_user_dialog
                             new_user_dialog()
                             st.stop()
                     else:
@@ -64,7 +64,13 @@ def is_logged_in():
         log_in()
 
     st.sidebar.write(f"Logged in as: **@{st.session_state["user"].get_id()}**")
-    if st.sidebar.button("Log out"):
+    if st.sidebar.button("Log out", width="stretch"):
         log_out()
+    if st.session_state["user"].get_id() == "admin":
+        st.sidebar.divider()
+        st.sidebar.write("Admin tools:")
+        if st.sidebar.button("Manage users", width="stretch"):
+            from src.ui_components.dialogues import manage_users_dialog
+            manage_users_dialog()
 
     return st.session_state["logged_in"]

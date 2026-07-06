@@ -19,13 +19,16 @@ def new_user_dialog():
 
 @st.dialog("Manage users")
 def manage_users_dialog():
-    col1, col2 = st.columns([0.1, 0.9])
+    col1, col2 = st.columns([0.03, 0.97], vertical_alignment="bottom")
     col1.write("**@**")
     with col2:
         user = user_select()
+    if not user:
+        st.stop()
     st.write(f"Do you want to delete the user **@{user.get_id()}** and all its folders and data?")
     if st.button(label="Delete user", key="delete_user_button", icon=":material/delete:", type="primary"):
         delete_user(user)
+        st.rerun()
         st.toast(f"You deleted all the data of **@{user.get_id()}**", duration="short")
 
 @st.dialog("Add new macrocycle")
