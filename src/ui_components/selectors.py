@@ -110,8 +110,9 @@ def workout_select():
     return workout
 
 def microcycle_select(macrocycle):
-    if "selected_week" not in st.session_state:
+    if "selected_week" not in st.session_state or st.session_state["selected_week"] >= macrocycle.get_length():
         st.session_state["selected_week"] = 0
+    
     for week_index in range(macrocycle.get_length()):
         is_active = st.session_state["selected_week"] == week_index
         button_type = "primary" if is_active else "secondary"

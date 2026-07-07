@@ -53,6 +53,8 @@ class Macrocycle:
         return self.name
     def get_microcycles(self):
         return self.microcycles
+    def get_microcycle(self, microcycle_index):
+        return self.microcycles[microcycle_index]
     def get_microcycle_length(self):
         return self.microcycle_length
     def get_length(self):

@@ -1,5 +1,4 @@
 import streamlit as st
-import json
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
@@ -216,7 +215,26 @@ def microcycle_table(microcycle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     if not microcycle:
         return
-    if len(get_workout_list(user)) == 0:
-        st.warning("There are no workouts to build a microcycle with, please, create some exercises first.")
-        return
     MICROCYCLE_FILE = check_file(f"{user.get_folder()}/microcycles.json")
+
+    user_workouts = get_workout_list(user)
+    workout_options = Workout.to_name_list(user_workouts)
+
+    workouts = microcycle.get_workouts()
+    table_data = [{}]
+    column_config = {}
+    for i in range(len(workouts)):
+        table_data[0][f"day_{i}"] = workouts[i].get_name() if workouts[i] is not None else None
+        column_config[f"day_{i}"] = st.column_config.SelectboxColumn(
+                f"Day {i+1}",
+                help="User's workouts",
+                options=workout_options,
+                format_func=lambda x: x.capitalize().replace("_", " "),
+                default=None
+        )
+    
+    edited_data = st.data_editor(
+        data=table_data, key=f"{microcycle.get_id()}_table", hide_index=True, num_rows="fixed",
+        column_config=column_config,
+        height="content"
+    )

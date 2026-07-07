@@ -27,3 +27,5 @@ class Microcycle:
 
     def get_id(self):
         return self.id
+    def get_workouts(self):
+        return self.workouts

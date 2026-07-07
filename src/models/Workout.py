@@ -85,3 +85,10 @@ class Workout:
             "muscles": exercise_map[exercise_data["exercise"]].get_primary_muscles(),
             "note": exercise_data["note"]
         }
+
+    @staticmethod
+    def to_name_list(workouts_list):
+        workout_names = []
+        for workout in workouts_list:
+            workout_names.append(workout.get_name())
+        return workout_names
