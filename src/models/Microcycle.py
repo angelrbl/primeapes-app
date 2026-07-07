@@ -3,7 +3,7 @@ class Microcycle:
         self.id = microcycle_id
         self.week = week_index
         self.length = length
-        self.workouts = workouts if workouts else [None * length]
+        self.workouts = workouts if workouts else [None for _ in range(length)]
     
     def __repr__(self):
         return f"<Microcycle {self.name}>"
@@ -11,7 +11,7 @@ class Microcycle:
     @classmethod
     def from_json(cls, data_dict, workout_map):
         workout_names = data_dict["workouts"]
-        workouts = [workout_map[name] for name in workout_names]
+        workouts = [(workout_map[name] if name else None) for name in workout_names]
         return cls(microcycle_id=data_dict["id"], week_index=data_dict["week"], length=data_dict["length"], workouts=workouts)
     
     def to_json(self):

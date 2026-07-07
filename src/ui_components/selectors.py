@@ -109,6 +109,17 @@ def workout_select():
                     return workout
     return workout
 
+def microcycle_select(macrocycle):
+    if "selected_week" not in st.session_state:
+        st.session_state["selected_week"] = 0
+    for week_index in range(macrocycle.get_length()):
+        is_active = st.session_state["selected_week"] == week_index
+        button_type = "primary" if is_active else "secondary"
+
+        if st.button(label=f"Week {week_index + 1}", key=f"week_button_{week_index}", type=button_type, width="stretch"):
+            st.session_state["selected_week"] = week_index
+            st.rerun()
+
 def macrocycle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
@@ -116,7 +127,7 @@ def macrocycle_select():
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
     macrocycle_name = st.selectbox(
         label="Macrocycle",
-        index=st.session_state["macrocycle_index"] if st.session_state["macrocycle_index"] else None,
+        index=st.session_state["macrocycle_index"] if st.session_state["macrocycle_index"] is not None else None,
         accept_new_options=False,
         options=macrocycle_names
     )
@@ -128,7 +139,6 @@ def macrocycle_select():
         for macrocycles_data in macrocycles_data:
             if macrocycles_data["name"] == macrocycle_name.lower().replace(" ", "_"):
                 macrocycle = Macrocycle.from_json(macrocycles_data, microcycle_map)
-                st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
     return macrocycle
 

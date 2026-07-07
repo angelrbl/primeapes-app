@@ -38,7 +38,7 @@ def add_macrocycle_dialog():
     start_date = col2.date_input(label="Starting date", value="today", key="add_macrocycle_start_date")
     description = st.text_area(label="Description", placeholder="A description for your macrocycle", key="add_¨macrocycle_description")
     col1, col2 = st.columns(2)
-    macrocycle_length = col1.number_input(label="Macrochycle length", placeholder="Num of microcycles in your plan", value=None, min_value=1, key="add_macrocycle_length")
+    macrocycle_length = col1.number_input(label="Macrocycle length", placeholder="Num of microcycles in your plan", value=None, min_value=1, key="add_macrocycle_length")
     microcycle_length = col2.number_input(label="Microcycle length", placeholder="Num of days in a microcycle", value=None, min_value=1, key="add_microcycle_length")
 
     if st.button("Add macrocycle", width="stretch"):
@@ -46,6 +46,7 @@ def add_macrocycle_dialog():
             st.error("Missing essential info to create your Macrocycle.")
         else:
             user = st.session_state["user"]
+            #GUARDAMOS MACROCICLO
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
             macrocycles_data = load_json_data(MACROCYCLES_FILE)
             macrocycle = Macrocycle(
@@ -55,6 +56,12 @@ def add_macrocycle_dialog():
                 length=macrocycle_length,
                 microcycle_length=microcycle_length)
             macrocycles_data.append(macrocycle.to_json())
-            if save_json_data(MACROCYCLES_FILE, macrocycles_data):
+            save_json_data(MACROCYCLES_FILE, macrocycles_data)
+            #GUARDAMOS MICROCICLOS
+            MICROCYCLES_FILE = check_file(f"{user.get_folder()}/microcycles.json")
+            microcycles_data = load_json_data(MICROCYCLES_FILE)
+            for microcycle in macrocycle.get_microcycles():
+                microcycles_data.append(microcycle.to_json()) 
+            if save_json_data(MICROCYCLES_FILE, microcycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1
                 st.rerun()
