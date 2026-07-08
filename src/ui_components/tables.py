@@ -230,13 +230,15 @@ def microcycle_table(microcycle):
                 help="User's workouts",
                 options=workout_options,
                 format_func=lambda x: x.capitalize().replace("_", " "),
-                default=None
+                default=None,
         )
     
     edited_data = st.data_editor(
         data=table_data, key=f"{microcycle.get_id()}_table", hide_index=True, num_rows="fixed",
         column_config=column_config,
-        height="content"
+        height="content",
+        row_height=50,
+        placeholder=""
     )
 
     note = st.text_input(
@@ -245,9 +247,9 @@ def microcycle_table(microcycle):
         key=f"{microcycle.get_id()}_note",
         placeholder="Type any special notes for this microcycle.",
         value=microcycle.get_note()
-        )
+    )
 
-    col_save, col_clear = st.columns(2, vertical_alignment="bottom")
+    col_save, col_clear = st.columns(2)
     #SAVE
     if col_save.button(label="Save changes",icon=":material/save:", key="microcycle_save_button", width="stretch"):
         microcycles_data = load_json_data(MICROCYCLE_FILE)
@@ -262,7 +264,8 @@ def microcycle_table(microcycle):
         for i in range(len(microcycles_data)):
             if microcycle.get_id() == microcycles_data[i]["id"]:
                 microcycles_data[i] = microcycle.to_json()
-        save_json_data(MICROCYCLE_FILE, microcycles_data)
+        if save_json_data(MICROCYCLE_FILE, microcycles_data):
+            st.rerun()
     #DELETE
     if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="microcycle_clear_button", width="stretch"):
         microcycles_data = load_json_data(MICROCYCLE_FILE)
@@ -274,3 +277,39 @@ def microcycle_table(microcycle):
                 microcycles_data[i] = microcycle.to_json()
         if save_json_data(MICROCYCLE_FILE, microcycles_data):
             st.rerun()
+
+def macrocycle_table(macrocycle):
+    if not macrocycle:
+        return
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    MACROCYCLE_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
+
+    table_data = []
+    columns_config = {
+        "week": st.column_config.TextColumn(
+            label="",
+            help="Week number",
+            alignment="center"
+        )
+        }
+    for i in range(macrocycle.get_length()):
+        table_data.append({})
+        microcycle = macrocycle.get_microcycle(i)
+        workouts = microcycle.get_workouts()
+        table_data[i]["week"] = f"Week {i + 1}"
+        for j in range(len(workouts)):
+                table_data[i][f"day_{j}"] = workouts[j].get_name().replace("_", " ").title() if workouts[j] is not None else None
+    for k in range(len(table_data[0].keys())):
+        columns_config[f"day_{k}"] = st.column_config.TextColumn(
+                    f"Day {k+1}",
+                    help="User's workouts per microcycle",
+                    alignment="center"
+            )         
+
+    table = st.dataframe(
+        data=table_data, key=f"{microcycle.get_id()}_table", hide_index=True,
+        column_config=columns_config,
+        height="content",
+        row_height=85,
+        placeholder=""
+    )

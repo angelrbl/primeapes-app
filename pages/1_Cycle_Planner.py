@@ -2,7 +2,7 @@ import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.selectors import macrocycle_select, microcycle_select
 from src.ui_components.dialogues import add_macrocycle_dialog
-from src.ui_components.tables import microcycle_table
+from src.ui_components.tables import microcycle_table, macrocycle_table
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -27,9 +27,11 @@ description = macrocycle.get_description()
 if description:
     with st.expander(label="Description"):
         st.write(description)
+macrocycle_table(macrocycle)
 
 st.divider()
 # Microcycle
+st.write("##### Microcycles:")
 col_selector, col_table = st.columns([1, 5], gap="small")
 with col_selector:
     with st.container(height=220, border=False):
