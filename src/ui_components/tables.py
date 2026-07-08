@@ -238,3 +238,39 @@ def microcycle_table(microcycle):
         column_config=column_config,
         height="content"
     )
+
+    note = st.text_input(
+        label="Note",
+        label_visibility="collapsed",
+        key=f"{microcycle.get_id()}_note",
+        placeholder="Type any special notes for this microcycle.",
+        value=microcycle.get_note()
+        )
+
+    col_save, col_clear = st.columns(2, vertical_alignment="bottom")
+    #SAVE
+    if col_save.button(label="Save changes",icon=":material/save:", key="microcycle_save_button", width="stretch"):
+        microcycles_data = load_json_data(MICROCYCLE_FILE)
+        workout_map = {wrk.get_name(): wrk for wrk in user_workouts}
+        
+        for day, workout_name in edited_data[0].items():
+            microcycle.set_workout(workout_map[workout_name] if workout_name is not None else None, int(day.split("_")[1]))
+
+        if note:
+            microcycle.set_note(note)
+
+        for i in range(len(microcycles_data)):
+            if microcycle.get_id() == microcycles_data[i]["id"]:
+                microcycles_data[i] = microcycle.to_json()
+        save_json_data(MICROCYCLE_FILE, microcycles_data)
+    #DELETE
+    if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="microcycle_clear_button", width="stretch"):
+        microcycles_data = load_json_data(MICROCYCLE_FILE)
+
+        microcycle.clear_workouts()
+
+        for i in range(len(microcycles_data)):
+            if microcycle.get_id() == microcycles_data[i]["id"]:
+                microcycles_data[i] = microcycle.to_json()
+        if save_json_data(MICROCYCLE_FILE, microcycles_data):
+            st.rerun()

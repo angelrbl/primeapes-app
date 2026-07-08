@@ -30,11 +30,10 @@ if description:
 
 st.divider()
 # Microcycle
-col_selector, col_table = st.columns([1, 5], gap="small", vertical_alignment="top")
+col_selector, col_table = st.columns([1, 5], gap="small")
 with col_selector:
     with st.container(height=220, border=False):
         microcycle_select(macrocycle=macrocycle)
 with col_table:
     if "selected_week" in st.session_state:
-        st.write(f"##### Week {st.session_state["selected_week"] + 1}:")
         microcycle_table(macrocycle.get_microcycle(st.session_state["selected_week"]))
