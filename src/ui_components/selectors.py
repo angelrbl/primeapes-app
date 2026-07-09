@@ -140,8 +140,28 @@ def macrocycle_select():
         for macrocycles_data in macrocycles_data:
             if macrocycles_data["name"] == macrocycle_name.lower().replace(" ", "_"):
                 macrocycle = Macrocycle.from_json(macrocycles_data, microcycle_map)
+                st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
     return macrocycle
+
+def category_multiselect():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    user_categories = get_categories_list(user)
+    if "default_categories" not in st.session_state:
+        st.session_state["default_categories"] = [element for element in ["Arm", "Back", "Chest", "Legs", "Shoulder", "Core"] if element in user_categories]
+
+    def handle_change_multiselect():
+        st.session_state["default_categories"] = st.session_state["categories_multiselect"]
+
+    categories = st.multiselect(
+        label="Categories",
+        accept_new_options=False,
+        options=user_categories,
+        default=st.session_state["default_categories"],
+        key="categories_multiselect",
+        on_change=handle_change_multiselect
+    )
+    return categories
 
 def user_select():
     USERS_FILE = check_file("data/users.json")

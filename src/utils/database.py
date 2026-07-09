@@ -47,6 +47,27 @@ def get_microcycle_list(user):
         microcycle_list.append(Microcycle.from_json(microcycle, workout_map))
     return microcycle_list
 
+def get_categories_list(user):
+    user_muscles = get_muscle_list(user=user)
+    categories = set()
+    for muscle in user_muscles:
+        for category in muscle.get_categories():
+            formatted_category = category.replace("_", " ").title()
+            categories.add(formatted_category)
+    return sorted(list(categories))
+
+def get_categories_dict(user):
+    user_muscles = get_muscle_list(user=user)
+    categories_dict = {}
+    for muscle in user_muscles:
+        for category in muscle.get_categories():
+            formatted_category = category.replace("_", " ").title()
+            if formatted_category not in categories_dict.keys():
+                categories_dict[formatted_category] = [muscle]
+            else:
+                categories_dict[formatted_category].append(muscle)
+    return categories_dict
+
 def load_json_data(file_path):
     with open(file_path, 'r') as f:
             file_data = json.load(f)

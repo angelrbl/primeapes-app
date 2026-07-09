@@ -1,6 +1,6 @@
 import streamlit as st
 from src.ui_components.sign_in import is_logged_in
-from src.ui_components.selectors import workout_select
+from src.ui_components.selectors import workout_select, category_multiselect
 from src.ui_components.tables import workout_table
 from src.ui_components.cards import workout_total_stat_card
 from src.ui_components.charts import muscle_volume_chart
@@ -26,6 +26,10 @@ with col2:
     workout_total_stat_card(workout=workout, stat="sets")
 with col3:
     workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
-    
-muscle_volume_chart(workout.get_muscle_sets())
+
+col_polar_chart, col_bar_chart = st.columns([0.4,0.6])
+with col_polar_chart:
+    categories = category_multiselect()
+with col_bar_chart:
+    muscle_volume_chart(workout.get_muscle_sets())
     

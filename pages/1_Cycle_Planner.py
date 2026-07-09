@@ -1,6 +1,6 @@
 import streamlit as st
 from src.ui_components.sign_in import is_logged_in
-from src.ui_components.selectors import macrocycle_select, microcycle_select
+from src.ui_components.selectors import macrocycle_select, microcycle_select, category_multiselect  
 from src.ui_components.dialogues import add_macrocycle_dialog
 from src.ui_components.tables import microcycle_table, macrocycle_table
 from src.ui_components.charts import muscle_volume_chart
@@ -42,4 +42,9 @@ with col_table:
     if "selected_week" in st.session_state:
         microcycle_table(microcycle=microcycle)
 
-muscle_volume_chart(microcycle.get_muscle_sets())
+col_polar_chart, col_bar_chart = st.columns([0.4,0.6])
+with col_polar_chart:
+    categories = category_multiselect()
+with col_bar_chart:
+    muscle_volume_chart(microcycle.get_muscle_sets())
+    
