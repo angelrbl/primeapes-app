@@ -49,6 +49,10 @@ def add_macrocycle_dialog():
             #GUARDAMOS MACROCICLO
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
             macrocycles_data = load_json_data(MACROCYCLES_FILE)
+            for macrocycle_data in macrocycles_data:
+                if macrocycle_data["name"] == name.lower().replace(" ", "_"):
+                    st.error("This name is already used by another macrocycle, please try another one.")
+                    st.stop()
             macrocycle = Macrocycle(
                 name=name.lower().replace(" ", "_"),
                 start_date=start_date,

@@ -5,7 +5,7 @@ from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import *
-
+from math import ceil
 
 def muscle_table(muscle):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -281,8 +281,20 @@ def microcycle_table(microcycle):
 def macrocycle_table(macrocycle):
     if not macrocycle:
         return
+    
+    if not "first_microcycle" in st.session_state or not "last_microcycle" in st.session_state:
+        st.session_state["first_microcycle"] = 0
+        st.session_state["last_macrocycle"] = 4
+
+    if macrocycle.get_length() <= 4:
+        pagination_needed = False
+        st.session_state["first_microcycle"] = 0
+        st.session_state["last_microcycle"] = macrocycle.get_length()
+    else:
+        pagination_needed = True
+
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
-    MACROCYCLE_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
+    MICROCYCLE_FILE = check_file(f"{user.get_folder()}/microcycles.json")
 
     table_data = []
     columns_config = {
@@ -291,14 +303,15 @@ def macrocycle_table(macrocycle):
             help="Week number",
             alignment="center"
         )
-        }
-    for i in range(macrocycle.get_length()):
+    }
+    
+    for i in range(st.session_state["first_microcycle"], st.session_state["last_microcycle"]):
         table_data.append({})
         microcycle = macrocycle.get_microcycle(i)
         workouts = microcycle.get_workouts()
-        table_data[i]["week"] = f"Week {i + 1}"
+        table_data[i - st.session_state["first_microcycle"]]["week"] = f"Week {i + 1}"
         for j in range(len(workouts)):
-                table_data[i][f"day_{j}"] = workouts[j].get_name().replace("_", " ").title() if workouts[j] is not None else None
+                table_data[i - st.session_state["first_microcycle"]][f"day_{j}"] = workouts[j].get_name().replace("_", " ").title() if workouts[j] is not None else None
     for k in range(len(table_data[0].keys())):
         columns_config[f"day_{k}"] = st.column_config.TextColumn(
                     f"Day {k+1}",
@@ -313,3 +326,33 @@ def macrocycle_table(macrocycle):
         row_height=85,
         placeholder=""
     )
+    col_pagination, col_clear = st.columns([0.7,0.3], vertical_alignment="center")
+    with col_pagination:
+        if pagination_needed:
+            total_pages = int(ceil(macrocycle.get_length() / 4))
+            current_page_index = (st.session_state["first_microcycle"] // 4 + 1)
+
+            def handle_page_change():
+                selected_page = st.session_state["macrocycle_pagination"] - 1
+                st.session_state["first_microcycle"] = selected_page * 4
+                st.session_state["last_microcycle"] = selected_page * 4 + 4
+
+            st.pagination(
+                total_pages,
+                default=current_page_index,
+                key="macrocycle_pagination",
+                on_change=handle_page_change
+            )
+    with col_clear:
+        if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="macrocycle_clear_button", width="stretch"):
+            microcycles_data = load_json_data(MICROCYCLE_FILE)
+
+            macrocycle.clear_microcycles()
+
+            for microcycle in macrocycle.get_microcycles():
+                microcycle.set_note("")
+                for i in range(len(microcycles_data)):
+                    if microcycle.get_id() == microcycles_data[i]["id"]:
+                        microcycles_data[i] = microcycle.to_json()
+            if save_json_data(MICROCYCLE_FILE, microcycles_data):
+                st.rerun()

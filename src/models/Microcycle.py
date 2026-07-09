@@ -7,7 +7,7 @@ class Microcycle:
         self.note = note
     
     def __repr__(self):
-        return f"<Microcycle {self.name}>"
+        return f"<Microcycle {self.id}>"
 
     @classmethod
     def from_json(cls, data_dict, workout_map):
