@@ -3,10 +3,8 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-def workout_volume_chart(workout):
-    muscle_sets = workout.get_muscle_sets()
+def muscle_volume_chart(muscle_sets):
     if not muscle_sets:
-        st.info("Please, add exercises to the workout to see the volume distribution.")
         return
 
     df = pd.DataFrame(data=muscle_sets.items(), columns=["Muscle", "Sets"])

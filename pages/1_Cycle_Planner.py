@@ -3,6 +3,7 @@ from src.ui_components.sign_in import is_logged_in
 from src.ui_components.selectors import macrocycle_select, microcycle_select
 from src.ui_components.dialogues import add_macrocycle_dialog
 from src.ui_components.tables import microcycle_table, macrocycle_table
+from src.ui_components.charts import muscle_volume_chart
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -36,6 +37,9 @@ col_selector, col_table = st.columns([1, 5], gap="small")
 with col_selector:
     with st.container(height=220, border=False):
         microcycle_select(macrocycle=macrocycle)
+microcycle = macrocycle.get_microcycle(st.session_state["selected_week"])
 with col_table:
     if "selected_week" in st.session_state:
-        microcycle_table(macrocycle.get_microcycle(st.session_state["selected_week"]))
+        microcycle_table(microcycle=microcycle)
+
+muscle_volume_chart(microcycle.get_muscle_sets())

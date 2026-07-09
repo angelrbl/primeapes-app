@@ -3,7 +3,7 @@ from src.ui_components.sign_in import is_logged_in
 from src.ui_components.selectors import workout_select
 from src.ui_components.tables import workout_table
 from src.ui_components.cards import workout_total_stat_card
-from src.ui_components.charts import workout_volume_chart
+from src.ui_components.charts import muscle_volume_chart
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -27,5 +27,5 @@ with col2:
 with col3:
     workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
     
-workout_volume_chart(workout)
+muscle_volume_chart(workout.get_muscle_sets())
     

@@ -33,8 +33,7 @@ class Workout:
                 } for exercise in self.exercises]
         }
 
-    def get_muscle_sets(self):
-        muscle_sets = {}
+    def get_muscle_sets(self, muscle_sets={}):
         for exercise in self.exercises:
             for muscle in exercise["muscles"]:
                 muscle_name = muscle.get_name().replace("_", " ").title()

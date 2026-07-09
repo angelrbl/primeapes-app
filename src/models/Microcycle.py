@@ -35,6 +35,13 @@ class Microcycle:
         self.workouts = [None for _ in range(self.length)]
         return True
 
+    def get_muscle_sets(self):
+        muscle_sets = {}
+        for workout in self.workouts:
+            if workout:
+                muscle_sets.update(workout.get_muscle_sets(muscle_sets))
+        return muscle_sets
+
     def set_workout(self, workout, day_index):
         self.workouts[day_index] = workout
     def set_note(self, note):
