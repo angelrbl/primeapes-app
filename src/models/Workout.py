@@ -1,4 +1,3 @@
-from src.models.Exercise import Exercise
 from src.models.Muscle import Muscle
 
 class Workout:

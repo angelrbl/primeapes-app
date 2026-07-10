@@ -32,6 +32,17 @@ class Muscle:
         return True
 
     @staticmethod
+    def get_category_sets(category_map, muscle_sets={}):
+        category_sets = {}
+        for muscle, sets in muscle_sets.items():
+            for category, muscles in category_map.items():
+                if muscle in muscles:
+                    if category not in category_sets.keys():
+                        category_sets[category] = 0
+                    category_sets[category] += sets
+        return category_sets
+
+    @staticmethod
     def to_name_list(muscle_list):
         muscle_names = []
         for muscle in muscle_list:

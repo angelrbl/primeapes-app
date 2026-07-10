@@ -8,20 +8,10 @@ from src.models.User import User
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import *
 
-if "muscle_index" not in st.session_state:
-    st.session_state["muscle_index"] = None
-
-if "exercise_index" not in st.session_state:
-    st.session_state["exercise_index"] = None
-
-if "workout_index" not in st.session_state:
-    st.session_state["workout_index"] = None
-
-if "macrocycle_index" not in st.session_state:
-    st.session_state["macrocycle_index"] = None
-
 def muscle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if "muscle_index" not in st.session_state:
+        st.session_state["muscle_index"] = None
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
     muscles_data = load_json_data(MUSCLES_FILE)
     muscle_names = [muscle_data["name"].title().replace("_", " ") for muscle_data in muscles_data]
@@ -50,6 +40,8 @@ def muscle_select():
 
 def exercise_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if "exercise_index" not in st.session_state:
+        st.session_state["exercise_index"] = None
     EXERCISES_FILE = check_file(f"{user.get_folder()}/exercises.json")
     exercises_data = load_json_data(EXERCISES_FILE)
     exercise_names = [exercise_data["name"].title().replace("_", " ") for exercise_data in exercises_data]
@@ -80,6 +72,8 @@ def exercise_select():
 
 def workout_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if "workout_index" not in st.session_state:
+        st.session_state["workout_index"] = None
     WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
     workouts_data = load_json_data(WORKOUTS_FILE)
     workout_names = [workout_data["name"].replace("_", " ").title() for workout_data in workouts_data]
@@ -123,6 +117,8 @@ def microcycle_select(macrocycle):
 
 def macrocycle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if "macrocycle_index" not in st.session_state:
+        st.session_state["macrocycle_index"] = None
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
     macrocycles_data = load_json_data(MACROCYCLES_FILE)
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
@@ -159,7 +155,8 @@ def category_multiselect():
         options=user_categories,
         default=st.session_state["default_categories"],
         key="categories_multiselect",
-        on_change=handle_change_multiselect
+        on_change=handle_change_multiselect,
+        max_selections=6
     )
     return categories
 

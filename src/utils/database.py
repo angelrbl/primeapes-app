@@ -62,10 +62,11 @@ def get_categories_dict(user):
     for muscle in user_muscles:
         for category in muscle.get_categories():
             formatted_category = category.replace("_", " ").title()
+            formatted_muscle = muscle.get_name().replace("_", " ").title()
             if formatted_category not in categories_dict.keys():
-                categories_dict[formatted_category] = [muscle]
+                categories_dict[formatted_category] = [formatted_muscle]
             else:
-                categories_dict[formatted_category].append(muscle)
+                categories_dict[formatted_category].append(formatted_muscle)
     return categories_dict
 
 def load_json_data(file_path):

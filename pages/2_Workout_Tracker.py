@@ -3,7 +3,7 @@ from src.ui_components.sign_in import is_logged_in
 from src.ui_components.selectors import workout_select, category_multiselect
 from src.ui_components.tables import workout_table
 from src.ui_components.cards import workout_total_stat_card
-from src.ui_components.charts import muscle_volume_chart
+from src.ui_components.charts import muscle_volume_chart, category_volume_chart
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -28,8 +28,10 @@ with col3:
     workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
 
 col_polar_chart, col_bar_chart = st.columns([0.4,0.6])
+muscle_sets = workout.get_muscle_sets()
 with col_polar_chart:
     categories = category_multiselect()
+    category_volume_chart(selected_categories=categories, muscle_sets=muscle_sets)
 with col_bar_chart:
-    muscle_volume_chart(workout.get_muscle_sets())
+    muscle_volume_chart(muscle_sets=muscle_sets)
     
