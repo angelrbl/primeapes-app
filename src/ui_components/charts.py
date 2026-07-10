@@ -60,9 +60,6 @@ def category_volume_chart(selected_categories, muscle_sets):
 
     bar_width = ([0.96] * len(categories)) if len(categories) > 0 else ([0.96]*6)
 
-    print(categories)
-    print(volume_sets)
-
     fig = go.Figure(go.Barpolar(
         r=volume_sets,
         theta=categories,

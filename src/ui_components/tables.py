@@ -23,7 +23,7 @@ def muscle_table(muscle):
                 "Categories",
                 help="Muscle group categories",
                 options=muscle.get_categories(),
-                format_func=lambda x: x.capitalize( ),
+                format_func=lambda x: x.replace("_", " ").capitalize(),
                 accept_new_options=True
             )
         }
@@ -33,11 +33,11 @@ def muscle_table(muscle):
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
         muscles_data = load_json_data(MUSCLES_FILE)
-        muscle.set_categories(edited_data[0]["Categories"])
-        for i in range(len(muscles_data)):
-            if muscle.get_name() == muscles_data[i]["name"]:
-                muscles_data[i] = muscle.to_json()
-        save_json_data(MUSCLES_FILE, muscles_data)
+        if muscle.set_categories(edited_data[0]["Categories"]):
+            for i in range(len(muscles_data)):
+                if muscle.get_name() == muscles_data[i]["name"]:
+                    muscles_data[i] = muscle.to_json()
+            save_json_data(MUSCLES_FILE, muscles_data)
     #DELETE
     if col2.button("Delete muscle", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
         muscles_data = load_json_data(MUSCLES_FILE)
@@ -319,7 +319,7 @@ def macrocycle_table(macrocycle):
                     alignment="center"
             )         
 
-    table = st.dataframe(
+    st.dataframe(
         data=table_data, key=f"{microcycle.get_id()}_table", hide_index=True,
         column_config=columns_config,
         height="content",

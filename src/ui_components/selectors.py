@@ -18,7 +18,7 @@ def muscle_select():
 
     muscle_name = st.selectbox(
         label="Muscle",
-        index=st.session_state["muscle_index"] if st.session_state["muscle_index"] else None,
+        index=st.session_state["muscle_index"] if st.session_state["muscle_index"] is not None else None,
         accept_new_options=True,
         options=muscle_names)
 

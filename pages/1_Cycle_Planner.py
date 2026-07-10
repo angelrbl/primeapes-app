@@ -21,7 +21,7 @@ if not macrocycle:
    st.stop()
 
 # Show basic data from your macrocycle
-col1, col2 = st.columns([0.85, 0.15])
+col1, col2 = st.columns([0.7, 0.3])
 col1.write(f"###### Showing - {macrocycle.get_name().title().replace("_", " ")}")
 col2.write(f"###### Starting date: {macrocycle.get_date()}")
 description = macrocycle.get_description()
@@ -42,7 +42,7 @@ with col_table:
     if "selected_week" in st.session_state:
         microcycle_table(microcycle=microcycle)
 
-col_polar_chart, col_bar_chart = st.columns([0.4,0.6])
+col_polar_chart, col_bar_chart = st.columns([0.4,0.6], vertical_alignment="center")
 muscle_sets = microcycle.get_muscle_sets()
 with col_polar_chart:
     categories = category_multiselect()
