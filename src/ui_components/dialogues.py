@@ -84,3 +84,24 @@ def weigh_in_dialog():
             user = st.session_state["user"]
             add_weigh_in(user=user, weight=weight, date=date)
             st.rerun()
+
+@st.dialog("Edit height")
+def set_height_dialog():
+    st.write("Update your height:")
+    height = st.number_input(label="Height", placeholder="Enter a valid height (cm)", key="set_height_input", value=None, step=1, min_value=1)
+
+    if st.button("Update height", width="stretch"):
+        if not height:
+            st.error("Please, enter a valid height")
+        else:
+            USERS_FILE = check_file(f"data/users.json")
+            user = st.session_state["user"]
+            user.set_height(height=height)
+
+            users_data = load_json_data(USERS_FILE)
+            for user_data in users_data:
+                if user_data["id"] == user.get_id():
+                    user_data["height"] = height
+                    break
+            save_json_data(USERS_FILE, users_data)
+            st.rerun()

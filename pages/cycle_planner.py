@@ -45,8 +45,9 @@ with col_table:
 col_polar_chart, col_bar_chart = st.columns([0.4,0.6], vertical_alignment="center")
 muscle_sets = microcycle.get_muscle_sets()
 with col_polar_chart:
-    categories = category_multiselect()
-    category_volume_chart(selected_categories=categories, muscle_sets=muscle_sets)
+    if muscle_sets:
+        categories = category_multiselect()
+        category_volume_chart(selected_categories=categories, muscle_sets=muscle_sets)
 with col_bar_chart:
     muscle_volume_chart(muscle_sets=muscle_sets)
     

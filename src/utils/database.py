@@ -79,52 +79,38 @@ def get_categories_dict(user):
 
 def get_bodyweight_history_list(user):
     BODYWEIGHT_HISTORY_FILE = check_file(f"{user.get_folder()}/bodyweight_history.json")
-    bodyweight_history_data = load_json_data(BODYWEIGHT_HISTORY_FILE)
-    bodyweight_history = []
-    for bodyweight in bodyweight_history_data:
-        bodyweight_history.append(bodyweight)
-    return bodyweight_history
+    return load_json_data(BODYWEIGHT_HISTORY_FILE)
 
+def add_weigh_in(user, weight, date = None):
+    if date is None:
+        date = dt.today().date()
 
-def add_weigh_in(user, weight, date = dt.today().date()):
     BODYWEIGHT_HISTORY_FILE = check_file(f"{user.get_folder()}/bodyweight_history.json")
     USERS_FILE = check_file(f"data/users.json")
+
     user_bodyweight_history = get_bodyweight_history_list(user)
+    date_str = date.strftime('%Y-%m-%d')
 
-    weigh_in = {
-        "date": date.strftime('%Y-%m-%d'),
-        "weight": weight
-    }
+    date_exists = False
+    for entry in user_bodyweight_history:
+        if entry["date"] == date_str:
+            entry["weight"] = weight
+            date_exists = True
+            break
+    
+    if not date_exists:
+        user_bodyweight_history.append({"date": date_str, "weight": weight})
 
-    for i in range(len(user_bodyweight_history)):
-        if dt.strptime(user_bodyweight_history[-i]["date"], '%Y-%m-%d').date() == date:
-            user_bodyweight_history[-i]["weight"] = weight
-            if i == 1:
-                users_data = load_json_data(USERS_FILE)
-                user.set_weight(weight)
-                for user_data in users_data:
-                    if user_data["user_id"] == user.get_id():
-                        user_data = user.to_json()
-                save_json_data(USERS_FILE, users_data)
-            break
-        elif dt.strptime(user_bodyweight_history[i]["date"], '%Y-%m-%d').date() == date:
-            user_bodyweight_history[i]["weight"] = weight
-            break
-        elif dt.strptime(user_bodyweight_history[-i]["date"], '%Y-%m-%d').date() < date:
-            user_bodyweight_history.insert(len(user_bodyweight_history)-i, weigh_in)
-            if i == 1:
-                users_data = load_json_data(USERS_FILE)
-                user.set_weight(weight)
-                print(user.get_weight())
-                for user_data in users_data:
-                    if user_data["user_id"] == user.get_id():
-                        user_data = user.to_json()
-                save_json_data(USERS_FILE, users_data)
-            break
-        elif dt.strptime(user_bodyweight_history[i]["date"], '%Y-%m-%d').date() > date:
-            user_bodyweight_history.insert(i, weigh_in)
-            break
+    user_bodyweight_history = sorted(user_bodyweight_history, key=lambda x: dt.strptime(x["date"], '%Y-%m-%d').date())
+    save_json_data(BODYWEIGHT_HISTORY_FILE, user_bodyweight_history)
 
-    if save_json_data(BODYWEIGHT_HISTORY_FILE, user_bodyweight_history):
-        return True
-    return False
+    if user_bodyweight_history[-1]["date"] == date_str:
+        user.set_weight(weight)
+
+        users_data = load_json_data(USERS_FILE)
+        for user_data in users_data:
+            if user_data["id"] == user.get_id():
+                user_data["weight"] = weight
+                break
+        save_json_data(USERS_FILE, users_data)
+    return True

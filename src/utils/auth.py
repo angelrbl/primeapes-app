@@ -28,7 +28,7 @@ def create_user_account(username, password):
 def initialize_new_user(user_id, name, weight, height):
     USER_FILE = check_file("data/users.json")
     users_data = load_json_data(USER_FILE)
-    user = User(user_id=user_id, name=name, weight=weight, height=height)
+    user = User(id=user_id, name=name, weight=weight, height=height)
     users_data.append(user.to_json())
     save_json_data(USER_FILE, users_data)
     initialize_user_folders(user)
@@ -38,7 +38,7 @@ def initialize_user(user_id):
     USER_FILE = check_file("data/users.json")
     users_data = load_json_data(USER_FILE)
     for user in users_data:
-        if user["user_id"] == user_id:
+        if user["id"] == user_id:
             user = User.from_json(user)
             return user
     return None
@@ -52,7 +52,7 @@ def delete_user(user):
     del credentials[user.get_id()]
     save_json_data(CREDENTIALS_FILE, credentials)
     for user_data in users_data:
-        if user_data["user_id"] == user.get_id():
+        if user_data["id"] == user.get_id():
             users_data.remove(user_data)
             if save_json_data(USER_FILE, users_data):
                 delete_folder(USER_FOLDER)

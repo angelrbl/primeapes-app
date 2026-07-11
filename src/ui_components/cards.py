@@ -33,3 +33,11 @@ def weight_card():
         value=user.get_weight(),
         border=True
     )
+
+def height_card():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    st.metric(
+        label="Height (cm)",
+        value=user.get_height(),
+        border=True
+    )

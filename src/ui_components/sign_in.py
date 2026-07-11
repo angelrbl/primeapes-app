@@ -63,7 +63,12 @@ def is_logged_in():
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
 
-    if st.session_state["logged_in"] == False:
+    if "user" not in st.session_state:
+        st.session_state["user"] = None    
+        st.session_state["logged_in"] = False
+
+    if st.session_state["logged_in"] == False or st.session_state["user"] is None:
+        st.session_state["logged_in"] = False
         log_in()
 
     st.sidebar.write(f"Logged in as: **@{st.session_state["user"].get_id()}**")
