@@ -1,15 +1,15 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
 from src.utils.files import check_file
-from src.utils.database import save_json_data, load_json_data
+from src.utils.database import save_json_data, load_json_data, add_weigh_in
 from src.utils.auth import delete_user
 from src.ui_components.selectors import user_select
 
 @st.dialog("Create new user", dismissible=False)
 def new_user_dialog():
     name = st.text_input(label="Name", placeholder="Type your name", key="new_user_name")
-    weight = st.number_input(label="Weight", placeholder="Type your weight (kg)", key="new_user_weight", value=None, step=1)
-    height = st.number_input(label="Height", placeholder="Type your height (cm)", key="new_user_height", value=None, step=1)
+    weight = st.number_input(label="Weight", placeholder="Type your weight (kg)", key="new_user_weight", value=None, step=1, min_value=1)
+    height = st.number_input(label="Height", placeholder="Type your height (cm)", key="new_user_height", value=None, step=1, min_value=1)
     if st.button("Create user"):
         if not (name and weight and height):
             st.error("Please, fill all the items before submitting.")
@@ -69,3 +69,18 @@ def add_macrocycle_dialog():
             if save_json_data(MICROCYCLES_FILE, microcycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1
                 st.rerun()
+
+@st.dialog("Weigh in")
+def weigh_in_dialog():
+    st.write("Register your bodyweight:")
+    col_weight, col_date = st.columns([0.7, 0.3])
+    weight = col_weight.number_input(label="Weight (kg)", min_value=1, placeholder="Enter a valid weight (kg)", key="new_weight_input", value=None)
+    date = col_date.date_input(label="Date", value="today", key="weigh_date_input")
+
+    if st.button("Register weight", width="stretch"):
+        if not weight:
+            st.error("Please, enter a valid weight")
+        else:
+            user = st.session_state["user"]
+            add_weigh_in(user=user, weight=weight, date=date)
+            st.rerun()

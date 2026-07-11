@@ -20,11 +20,18 @@ class User:
         return {"user_id": self.user_id, "name": self.name, "weight": self.weight, "height": self.height,
                 "measurments": self.measurments, "macrocycles": self.macrocycles, "user_folder": self.user_folder}
 
+    def set_weight(self, weight):
+        self.weight = weight
+    def set_height(self, height):
+        self.height = height
+
     def get_name(self):
         return self.name
-    
     def get_id(self):
         return self.user_id
-    
     def get_folder(self):
         return f"data/users/{self.user_id}" if self.user_id != "admin" else f"data/default"
+    def get_weight(self):
+        return self.weight
+    def get_height(self):
+        return self.height

@@ -1,5 +1,6 @@
 import streamlit as st
 from src.models.Workout import Workout
+from src.ui_components.sign_in import is_logged_in
 
 def workout_total_stat_card(workout, stat, unit=""):
     exercises = workout.get_exercises()
@@ -21,5 +22,14 @@ def workout_total_stat_card(workout, stat, unit=""):
     st.metric(
         label=f"{stat.title()} ({unit})" if unit else stat.title(),
         value=total,
+        border=True
+    )
+
+def weight_card():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    
+    st.metric(
+        label="Bodyweight (kg)",
+        value=user.get_weight(),
         border=True
     )
