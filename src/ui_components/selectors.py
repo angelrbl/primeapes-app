@@ -160,6 +160,22 @@ def category_multiselect():
     )
     return categories
 
+def bodyweight_past_date_selector():
+    if "bodyweight_past_date" in st.session_state:
+        st.session_state["bodyweight_past_date"] = "last week"
+    
+    options = ["yesterday", "last week", "last month"]
+
+    past_date = st.selectbox(
+        label="Past date",
+        label_visibility="collapsed",
+        options=options,
+        accept_new_options=False,
+        index=options.index(st.session_state["bodyweight_past_date"])
+        )
+    
+    return past_date
+
 def user_select():
     USERS_FILE = check_file("data/users.json")
     users_data = load_json_data(USERS_FILE)
