@@ -166,13 +166,18 @@ def bodyweight_past_date_selector():
     
     options = ["yesterday", "last week", "last month"]
 
+    def handle_past_date_select():
+        st.session_state["bodyweight_past_date"] = st.session_state["past_date_selector"]
+
     past_date = st.selectbox(
         label="Past date",
         label_visibility="collapsed",
         options=options,
         accept_new_options=False,
-        index=options.index(st.session_state["bodyweight_past_date"])
-        )
+        index=options.index(st.session_state["bodyweight_past_date"]),
+        key="past_date_selector",
+        on_change=handle_past_date_select
+    )
     
     return past_date
 

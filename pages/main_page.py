@@ -11,7 +11,7 @@ is_logged_in()
 st.title(f"Welcome, {st.session_state["user"].get_name() if st.session_state["user"] else is_logged_in()}")
 st.write("#### These are some of your stats:")
 
-col_weight, col_weight_delta, col_height = st.columns(3, gap="small")
+col_weight, col_weight_delta, col_height = st.columns(3, gap="small", vertical_alignment="top")
 
 with col_weight:
     weight_card()
@@ -22,7 +22,7 @@ with col_weight_delta:
     if "bodyweight_past_date" not in st.session_state:
         st.session_state["bodyweight_past_date"] = "last week"
     weight_delta_card(st.session_state["bodyweight_past_date"])
-    st.session_state["bodyweight_past_date"] = bodyweight_past_date_selector()
+    bodyweight_past_date_selector()
 
 with col_height:
     height_card()

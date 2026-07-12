@@ -3,7 +3,6 @@ from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
 from src.utils.database import get_bodyweight_history_list
 from datetime import datetime as dt, timedelta as td
-from math import ceil
 
 def workout_total_stat_card(workout, stat, unit=""):
     exercises = workout.get_exercises()
@@ -34,7 +33,8 @@ def weight_card():
     st.metric(
         label="Bodyweight (kg)",
         value=f"{user.get_weight()} kg",
-        border=True
+        border=True,
+        height="stretch"
     )
 
 def height_card():
@@ -42,7 +42,8 @@ def height_card():
     st.metric(
         label="Height (cm)",
         value=f"{user.get_height()} cm",
-        border=True
+        border=True,
+        height="stretch"
     )
 
 def weight_delta_card(past_date):
@@ -57,7 +58,7 @@ def weight_delta_card(past_date):
         "last week": 3,
         "last month": 5
     }
-    num_of_days = margin_map[past_date]
+    num_of_days = past_date_map[past_date]
     max_margin_days = margin_map[past_date]
 
     user_bodyweight_history = get_bodyweight_history_list(user=user)
@@ -80,15 +81,15 @@ def weight_delta_card(past_date):
     delta_value = 0
     if target_weight:
         weight_diff = last_entry["weight"] - target_weight
-        if target_weight >= 0:
+        if weight_diff >= 0:
             value = f"+{weight_diff} kg"
         else:
-            value = f"-{weight_diff} kg"
-        delta_value = (weight_diff / last_entry["weight"]) * 100
+            value = f"{weight_diff} kg"
+        delta_value = (weight_diff / target_weight) * 100
 
     st.metric(
         label=f"Difference since {past_date}",
         value=value,
-        delta=f"{"+" if delta_value >= 0 else "-"}{delta_value:.2f} %",
+        delta=f"{"+" if delta_value >= 0 else ""}{delta_value:.2f} %",
         border=True
     )
