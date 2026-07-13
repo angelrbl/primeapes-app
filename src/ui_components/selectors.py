@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import datetime as dt
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
@@ -201,6 +202,50 @@ def main_page_stats_selector():
         format_func=lambda x: x.title()
     )
     return main_page_stats
+
+def weight_evolution_date_selector():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    if "weight_evolution_date" not in st.session_state:
+        st.session_state["weight_evolution_date"] = "forever"
+    if "custom_range" not in st.session_state:
+        st.session_state["custom_range"] = False
+
+    options = ["last week", "last 30 days", "last 90 days", "forever", "custom"]
+
+    def handle_date_select():
+        st.session_state["weight_evolution_date"] = st.session_state["weight_evo_date_selector"]
+        if st.session_state["weight_evo_date_selector"] == "custom":
+            st.session_state["custom_range"] = True
+        else:
+            st.session_state["custom_range"] = False
+
+
+    col_selector, col_date = st.columns([0.6,0.4])
+
+    with col_selector:
+        past_date = st.selectbox(
+            label="Time range:",
+            options=options,
+            accept_new_options=False,
+            index=options.index(st.session_state["weight_evolution_date"]),
+            key="weight_evo_date_selector",
+            on_change=handle_date_select,
+            format_func=lambda x: x.title()
+        )
+    with col_date:
+        user_bodyweight_history = get_bodyweight_history_list(user=user)
+        min_possible = user_bodyweight_history[0]["date"]
+        max_possible = user_bodyweight_history[-1]["date"]
+        curstom_date_range = st.date_input(
+            label="Custom range:",
+            value=(min_possible, max_possible),
+            min_value=min_possible,
+            max_value=max_possible,
+            disabled=(not st.session_state["custom_range"]),
+            key="custom_date_range"
+        )
+    
+    return past_date
 
 def user_select():
     USERS_FILE = check_file("data/users.json")

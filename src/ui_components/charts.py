@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from src.utils.database import get_categories_dict, get_bodyweight_history_list
 from src.ui_components.sign_in import is_logged_in
 from src.models.Muscle import Muscle
+from datetime import datetime as dt, timedelta
 
 def muscle_volume_chart(muscle_sets):
     if not muscle_sets:
@@ -92,19 +93,39 @@ def category_volume_chart(selected_categories, muscle_sets):
 
     st.plotly_chart(fig, width="content", config={"displayModeBar": False})
 
-def weight_evolution_chart(filter=0):
+def weight_evolution_chart(time_range):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     user_bodyweight_history = get_bodyweight_history_list(user=user)
 
     if len(user_bodyweight_history) == 0:
-        st.info("Not enough data to show user's bodhweight evolution")
+        st.info("Not enough data to show user's bodyweight evolution.")
         return
 
     df = pd.DataFrame(user_bodyweight_history)
     df["date"] = pd.to_datetime(df["date"]).dt.date
     df.sort_values("date")
 
+    today = dt.today().date()
     df_filtered = df.copy()
+
+    match(time_range):
+        case "last week":
+            df_filtered = df[df["date"] >= (today - timedelta(days=7))]
+        case "last 30 days":
+            df_filtered = df[df["date"] >= (today - timedelta(days=30))]
+        case "last 90 days":
+            df_filtered = df[df["date"] >= (today - timedelta(days=90))]
+        case "custom":
+            if "custom_date_range" not in st.session_state:
+                st.session_state["custom_date_range"] = (df["date"].min(), df["date"].max())
+            custom_date_range = st.session_state["custom_date_range"]
+            if isinstance(custom_date_range, tuple) and len(custom_date_range) == 2:
+                start_date, end_date = custom_date_range
+                df_filtered = df[(df["date"] >= start_date) & (df["date"] <= end_date)]
+    
+    if df_filtered.empty:
+        st.info("Not enough data to show user's bodyweight evolution.")
+        return
 
     fig = go.Figure()
 
