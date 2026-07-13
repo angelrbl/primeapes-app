@@ -161,7 +161,7 @@ def category_multiselect():
     return categories
 
 def bodyweight_past_date_selector():
-    if "bodyweight_past_date" in st.session_state:
+    if "bodyweight_past_date" not in st.session_state:
         st.session_state["bodyweight_past_date"] = "last week"
     
     options = ["yesterday", "last week", "last month"]
@@ -180,6 +180,27 @@ def bodyweight_past_date_selector():
     )
     
     return past_date
+
+def main_page_stats_selector():
+    if "main_page_stats" not in st.session_state:
+        st.session_state["main_page_stats"] = "weight"
+    
+    options = ["weight", "measurements", "macrocycle"]
+
+    def handle_main_page_stats_select():
+        st.session_state["main_page_stats"] = st.session_state["main_page_stats_selector"]
+
+    main_page_stats = st.pills(
+        label="Stats:",
+        options=options,
+        selection_mode="single",
+        default=st.session_state["main_page_stats"],
+        key="main_page_stats_selector",
+        on_change=handle_main_page_stats_select,
+        required=True,
+        format_func=lambda x: x.title()
+    )
+    return main_page_stats
 
 def user_select():
     USERS_FILE = check_file("data/users.json")

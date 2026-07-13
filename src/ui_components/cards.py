@@ -30,11 +30,15 @@ def workout_total_stat_card(workout, stat, unit=""):
 def weight_card():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     
+    user_bodyweight_history = get_bodyweight_history_list(user=user)
+    bodyweight_history_data = [entry["weight"] for entry in user_bodyweight_history]
     st.metric(
         label="Bodyweight (kg)",
         value=f"{user.get_weight()} kg",
         border=True,
-        height="stretch"
+        chart_data=bodyweight_history_data,
+        chart_type="line",
+        delta_color="blue"
     )
 
 def height_card():
@@ -91,5 +95,6 @@ def weight_delta_card(past_date):
         label=f"Difference since {past_date}",
         value=value,
         delta=f"{"+" if delta_value >= 0 else ""}{delta_value:.2f} %",
+        height="stretch",
         border=True
     )

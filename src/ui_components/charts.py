@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-from src.utils.database import get_categories_dict
+from src.utils.database import get_categories_dict, get_bodyweight_history_list
 from src.ui_components.sign_in import is_logged_in
 from src.models.Muscle import Muscle
 
@@ -88,6 +88,41 @@ def category_volume_chart(selected_categories, muscle_sets):
                 tickfont=dict(color="rgba(255, 255, 255, 0.5)")
             )
         )
+    )
+
+    st.plotly_chart(fig, width="content", config={"displayModeBar": False})
+
+def weight_evolution_chart(filter=0):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    user_bodyweight_history = get_bodyweight_history_list(user=user)
+
+    if len(user_bodyweight_history) == 0:
+        st.info("Not enough data to show user's bodhweight evolution")
+        return
+
+    df = pd.DataFrame(user_bodyweight_history)
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    df.sort_values("date")
+
+    df_filtered = df.copy()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=df_filtered["date"],
+        y=df_filtered["weight"],
+        mode="lines+markers",
+        line=dict(color="#FF4B4B", width=3),
+        marker=dict(size=7, color="#FF4B4B"),
+        hovertemplate="Date: %{x}, Weight: %{y} kg"
+    ))
+
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=10, b=10, l=10, r=10),
+        xaxis=dict(showgrid=False, color="rgba(255,255,255,0.6)", tickformat="%d %b"),
+        yaxis=dict(gridcolor="rgba(255, 255, 255, 0.1)", color="rgba(255,255,255,0.6)", autorange=True)
     )
 
     st.plotly_chart(fig, width="content", config={"displayModeBar": False})
