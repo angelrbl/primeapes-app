@@ -242,7 +242,7 @@ def weight_evolution_date_selector():
             min_value=min_possible,
             max_value=max_possible,
             disabled=(not st.session_state["custom_range"]),
-            key="custom_range"
+            key="custom_date_range"
         )
     
     return past_date

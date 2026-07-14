@@ -47,4 +47,6 @@ match st.session_state["main_page_stats"]:
         weight_evolution_chart(time_range=time_range)
         edit_button_container = st.container(horizontal_alignment="right")
         if edit_button_container.button(label="Edit entries", icon=":material/edit:"):
+            st.session_state["show_edit_weight_evo_dialog"] = not st.session_state["show_edit_weight_evo_dialog"] if st.session_state["show_edit_weight_evo_dialog"] else True
+        if st.session_state.get("show_edit_weight_evo_dialog") == True:
             edit_weight_evolution_dialog()
