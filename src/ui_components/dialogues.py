@@ -1,9 +1,10 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
 from src.utils.files import check_file
-from src.utils.database import save_json_data, load_json_data, add_weigh_in
+from src.utils.database import save_json_data, load_json_data, add_weigh_in, get_bodyweight_history_list
 from src.utils.auth import delete_user
-from src.ui_components.selectors import user_select
+from src.ui_components.selectors import user_select, weight_evolution_date_selector
+from math import ceil
 
 @st.dialog("Create new user", dismissible=False)
 def new_user_dialog():
@@ -84,6 +85,33 @@ def weigh_in_dialog():
             user = st.session_state["user"]
             add_weigh_in(user=user, weight=weight, date=date)
             st.rerun()
+
+@st.dialog("Edit bodyweight evolution")
+def edit_weight_evolution_dialog():
+    user = st.session_state["user"]
+    st.write("Edit an entry or search for a specific date:")
+    user_bodyweight_history = get_bodyweight_history_list(user=user)
+    user_bodyweight_history.reverse()
+
+    items_per_page = 10
+
+    total_items = len(user_bodyweight_history)
+    total_pages = ceil(total_items / items_per_page)
+
+    bodyweight_table = [st.empty() for _ in range(items_per_page)]
+    
+    active_page = st.pagination(num_pages=total_pages, width="stretch", key="weight_history_pagination")
+
+    start_index = (active_page - 1) * items_per_page
+    end_index = start_index + items_per_page
+    page_items = user_bodyweight_history[start_index:end_index]
+
+    for entry in page_items:
+        col_date, col_weight, col_edit, col_delete = bodyweight_table[page_items.index(entry)].columns([3, 3, 1, 1], vertical_alignment="center")
+        col_date.write(f"**{entry["date"]}**")
+        col_weight.write(f"{entry["weight"]} kg")
+        col_edit.button(label="", icon=":material/edit:", key=f"edit_weight_entry_button_{page_items.index(entry)}", help="Edit weight")
+        col_delete.button(label="", icon=":material/delete:", key=f"delete_weight_entry_button_{page_items.index(entry)}", help="Delete entry", type="primary")
 
 @st.dialog("Edit height")
 def set_height_dialog():

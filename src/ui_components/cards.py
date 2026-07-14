@@ -86,9 +86,9 @@ def weight_delta_card(past_date):
     if target_weight:
         weight_diff = last_entry["weight"] - target_weight
         if weight_diff >= 0:
-            value = f"+{weight_diff} kg"
+            value = f"+{weight_diff:.2f} kg"
         else:
-            value = f"{weight_diff} kg"
+            value = f"{weight_diff:.2f} kg"
         delta_value = (weight_diff / target_weight) * 100
 
     st.metric(

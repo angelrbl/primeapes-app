@@ -236,13 +236,13 @@ def weight_evolution_date_selector():
         user_bodyweight_history = get_bodyweight_history_list(user=user)
         min_possible = user_bodyweight_history[0]["date"]
         max_possible = user_bodyweight_history[-1]["date"]
-        curstom_date_range = st.date_input(
+        custom_date_range = st.date_input(
             label="Custom range:",
             value=(min_possible, max_possible),
             min_value=min_possible,
             max_value=max_possible,
             disabled=(not st.session_state["custom_range"]),
-            key="custom_date_range"
+            key="custom_range"
         )
     
     return past_date
