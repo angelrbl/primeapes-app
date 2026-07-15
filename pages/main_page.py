@@ -1,9 +1,10 @@
 import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card
-from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog, edit_weight_evolution_dialog
+from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog
 from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_selector
 from src.ui_components.charts import weight_evolution_chart
+from src.ui_components.forms import edit_weight_evolution_form
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -45,8 +46,10 @@ match st.session_state["main_page_stats"]:
         st.write("##### Bodyweight evolution")
         time_range = weight_evolution_date_selector()
         weight_evolution_chart(time_range=time_range)
+
         edit_button_container = st.container(horizontal_alignment="right")
         if edit_button_container.button(label="Edit entries", icon=":material/edit:"):
-            st.session_state["show_edit_weight_evo_dialog"] = not st.session_state["show_edit_weight_evo_dialog"] if st.session_state["show_edit_weight_evo_dialog"] else True
-        if st.session_state.get("show_edit_weight_evo_dialog") == True:
-            edit_weight_evolution_dialog()
+            st.session_state["show_edit_weight_evo_form"] = not st.session_state.get("show_edit_weight_evo_form", False)
+        
+        if st.session_state.get("show_edit_weight_evo_form") == True:
+            edit_weight_evolution_form()
