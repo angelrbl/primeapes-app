@@ -4,6 +4,7 @@ from src.utils.files import check_file
 from src.utils.database import save_json_data, load_json_data, add_weigh_in
 from src.utils.auth import delete_user
 from src.ui_components.selectors import user_select
+from datetime import datetime as dt
 
 @st.dialog("Create new user", dismissible=False)
 def new_user_dialog():
@@ -46,7 +47,7 @@ def add_macrocycle_dialog():
             st.error("Missing essential info to create your Macrocycle.")
         else:
             user = st.session_state["user"]
-            #GUARDAMOS MACROCICLO
+            #SAVE MACROCYCLE
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
             macrocycles_data = load_json_data(MACROCYCLES_FILE)
             for macrocycle_data in macrocycles_data:
@@ -60,8 +61,9 @@ def add_macrocycle_dialog():
                 length=macrocycle_length,
                 microcycle_length=microcycle_length)
             macrocycles_data.append(macrocycle.to_json())
+            macrocycles_data = sorted(macrocycles_data, key=lambda x: dt.strptime(x["start_date"], '%Y-%m-%d').date())
             save_json_data(MACROCYCLES_FILE, macrocycles_data)
-            #GUARDAMOS MICROCICLOS
+            #SAVE MICROCYCLES
             MICROCYCLES_FILE = check_file(f"{user.get_folder()}/microcycles.json")
             microcycles_data = load_json_data(MICROCYCLES_FILE)
             for microcycle in macrocycle.get_microcycles():

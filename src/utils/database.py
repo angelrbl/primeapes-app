@@ -5,14 +5,15 @@ from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.models.Microcycle import Microcycle
+from src.models.Macrocycle import Macrocycle
 
 def load_json_data(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
             file_data = json.load(f)
     return file_data
 
 def save_json_data(file_path, file_data):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(file_data, f, default=str)
         return True
     return False
@@ -54,6 +55,16 @@ def get_microcycle_list(user):
     for microcycle in microcycles_data:
         microcycle_list.append(Microcycle.from_json(microcycle, workout_map))
     return microcycle_list
+
+def get_macrocycle_list(user):
+    MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
+    user_microcycles = get_microcycle_list(user)
+    microcycle_map = {mic.get_id(): mic for mic in user_microcycles}
+    macrocycle_list = []
+    macrocycles_data = load_json_data(MACROCYCLES_FILE)
+    for macrocycle in macrocycles_data:
+        macrocycle_list.append(Macrocycle.from_json(macrocycle, microcycle_map))
+    return macrocycle_list
 
 def get_categories_list(user):
     user_muscles = get_muscle_list(user=user)

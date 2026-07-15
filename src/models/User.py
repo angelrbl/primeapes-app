@@ -1,11 +1,10 @@
 class User:
-    def __init__(self, id, name, weight, height, measurements={}, macrocycles=[]):
+    def __init__(self, id, name, weight, height, measurements={}):
         self.id = id
         self.name = name
         self.weight = weight
         self.height = height
         self.measurements = measurements
-        self.macrocycles = macrocycles
         self.user_folder = self.get_folder()
 
     def __repr__(self):
@@ -14,11 +13,11 @@ class User:
     @classmethod
     def from_json(cls, data_dict):
         return cls(id=data_dict["id"], name=data_dict["name"], weight=data_dict["weight"], height=data_dict["height"],
-                   measurements=data_dict["measurements"], macrocycles=data_dict["macrocycles"])
+                   measurements=data_dict["measurements"])
     
     def to_json(self):
         return {"id": self.id, "name": self.name, "weight": self.weight, "height": self.height,
-                "measurements": self.measurements, "macrocycles": self.macrocycles, "user_folder": self.user_folder}
+                "measurements": self.measurements, "user_folder": self.user_folder}
 
     def set_weight(self, weight):
         self.weight = weight

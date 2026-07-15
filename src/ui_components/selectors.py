@@ -118,11 +118,12 @@ def microcycle_select(macrocycle):
 
 def macrocycle_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
-    if "macrocycle_index" not in st.session_state:
-        st.session_state["macrocycle_index"] = None
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
     macrocycles_data = load_json_data(MACROCYCLES_FILE)
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
+    if "macrocycle_index" not in st.session_state:
+        st.session_state["macrocycle_index"] = None
+
     macrocycle_name = st.selectbox(
         label="Macrocycle",
         index=st.session_state["macrocycle_index"] if st.session_state["macrocycle_index"] is not None else None,
@@ -134,9 +135,9 @@ def macrocycle_select():
     if macrocycle_name:
         user_microcycles = get_microcycle_list(user=user)
         microcycle_map = {mic.get_id(): mic for mic in user_microcycles}
-        for macrocycles_data in macrocycles_data:
-            if macrocycles_data["name"] == macrocycle_name.lower().replace(" ", "_"):
-                macrocycle = Macrocycle.from_json(macrocycles_data, microcycle_map)
+        for macrocycle_data in macrocycles_data:
+            if macrocycle_data["name"] == macrocycle_name.lower().replace(" ", "_"):
+                macrocycle = Macrocycle.from_json(macrocycle_data, microcycle_map)
                 st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
     return macrocycle
@@ -193,6 +194,7 @@ def main_page_stats_selector():
 
     main_page_stats = st.pills(
         label="Stats:",
+        label_visibility="collapsed",
         options=options,
         selection_mode="single",
         default=st.session_state["main_page_stats"],
@@ -202,6 +204,28 @@ def main_page_stats_selector():
         format_func=lambda x: x.title()
     )
     return main_page_stats
+
+def macrocycle_stats_selector():
+    if "macrocycle_stats" not in st.session_state:
+        st.session_state["macrocycle_stats"] = "general"
+    
+    options = ["general", "muscle"]
+
+    def handle_macrocycle_stats_select():
+        st.session_state["macrocycle_stats"] = st.session_state["macrocycle_stats_selector"]
+
+    macrocycle_stats = st.pills(
+        label="Stats:",
+        label_visibility="collapsed",
+        options=options,
+        selection_mode="single",
+        default=st.session_state["macrocycle_stats"],
+        key="macrocycle_stats_selector",
+        on_change=handle_macrocycle_stats_select,
+        required=True,
+        format_func=lambda x: x.title()
+    )
+    return macrocycle_stats
 
 def weight_evolution_date_selector():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()

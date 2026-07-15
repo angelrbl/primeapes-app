@@ -2,9 +2,10 @@ import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card
 from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog
-from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_selector
+from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_selector, macrocycle_select, macrocycle_stats_selector
 from src.ui_components.charts import weight_evolution_chart
 from src.ui_components.forms import edit_weight_evolution_form
+from src.utils.database import get_macrocycle_list
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -38,8 +39,11 @@ st.divider()
 st.space("small")
 
 #SPECIFIC STATS
-main_page_stats_selector()
-st.space("small")
+with st.container(horizontal_alignment="center", vertical_alignment="center"):
+    col_text, col_pills = st.columns([0.3,0.7])
+    col_text.write("**Stats:**")
+    with col_pills:     main_page_stats_selector()
+st.divider()
 
 match st.session_state["main_page_stats"]:
     case "weight":
@@ -53,3 +57,25 @@ match st.session_state["main_page_stats"]:
         
         if st.session_state.get("show_edit_weight_evo_form") == True:
             edit_weight_evolution_form()
+    
+    case "macrocycle":
+        st.write("##### Macrocycle stats")
+
+        macrocycles = get_macrocycle_list(user=st.session_state["user"])
+        if not macrocycles:
+            st.info("There are no macrocycles to show stats from.")
+            st.stop()
+        macrocycle = st.session_state.get("macrocycle", macrocycles[0])
+
+        macrocycle_stats_selector()
+        
+        with st.container(border=True):
+            col_text, col_change = st.columns([0.75,0.25], vertical_alignment="center")
+            col_text.write(f"Current macrocycle - {macrocycle.get_name().replace("_", " ").title()}")
+            popover = col_change.popover(label="Change macrocycle", on_change="rerun")
+            with popover:
+                if popover.open:
+                    new_macrocycle = macrocycle_select()
+                    if st.session_state.get("macrocycle", None) != new_macrocycle:
+                        st.session_state["macrocycle"] = new_macrocycle
+        
