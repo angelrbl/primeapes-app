@@ -13,7 +13,7 @@ st.write("###### Select a macrocycle or create a new one:")
 
 col1, col2 = st.columns([0.8, 0.2], vertical_alignment="bottom")
 with col1:
-    macrocycle = macrocycle_select()
+    macrocycle = macrocycle_select(index="macrocycle_index")
 with col2:
     st.button("Add new", on_click=add_macrocycle_dialog, width="stretch")
 

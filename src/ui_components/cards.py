@@ -27,6 +27,52 @@ def workout_total_stat_card(workout, stat, unit=""):
         border=True
     )
 
+def macrocycle_stats_cards(macrocycle):
+    microcycles = macrocycle.get_microcycles()
+
+    workout_amount = sum(microcycle.get_workout_amount() for microcycle in microcycles)
+
+    exercise_amount = 0
+    exercise_sets = 0
+    exercise_reps = 0
+    for microcycle in microcycles:
+        microcycle_workouts = microcycle.get_workouts()
+        for workout in microcycle_workouts:
+            if workout:
+                exercise_amount += workout.get_exercise_amount()
+                for ex in workout.get_exercises():
+                    exercise_sets += Workout.get_exercise_stat_value(ex, "sets")
+                    exercise_reps += Workout.get_exercise_stat_value(ex, "reps")
+
+    col1, col2, col3 = st.columns(3, vertical_alignment="top")
+    col1.metric(
+        label="Microcycles",
+        value=f"{macrocycle.get_length()}",
+        border=True,
+        )
+    with col2:
+        st.metric(
+            label="Workouts",
+            value=f"{workout_amount}",
+            border=True 
+        )
+        st.metric(
+            label="Exercises",
+            value=f"{exercise_amount}",
+            border=True 
+        )
+    with col3:
+        st.metric(
+            label="Sets",
+            value=f"{exercise_sets}",
+            border=True 
+        )
+        st.metric(
+            label="Reps (aprox)",
+            value=f"{exercise_reps}",
+            border=True 
+        )
+
 def weight_card():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     

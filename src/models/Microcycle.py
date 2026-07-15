@@ -41,6 +41,13 @@ class Microcycle:
             if workout:
                 muscle_sets.update(workout.get_muscle_sets(muscle_sets))
         return muscle_sets
+    
+    def get_workout_amount(self):
+        workout_amount = 0
+        for workout in self.workouts:
+            if workout:
+                workout_amount += 1
+        return workout_amount
 
     def set_workout(self, workout, day_index):
         self.workouts[day_index] = workout

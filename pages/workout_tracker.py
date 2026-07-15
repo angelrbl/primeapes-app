@@ -28,7 +28,7 @@ with col3:
     workout_total_stat_card(workout=workout, stat="reps", unit="aprox")
 
 col_polar_chart, col_bar_chart = st.columns([0.4,0.6], vertical_alignment="center")
-muscle_sets = workout.get_muscle_sets()
+muscle_sets = workout.get_muscle_sets(muscle_sets={})
 with col_polar_chart:
     if muscle_sets is not None:
         categories = category_multiselect()

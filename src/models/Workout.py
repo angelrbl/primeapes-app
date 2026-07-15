@@ -61,6 +61,9 @@ class Workout:
     def set_exercises(self, exercises):
         self.exercises = exercises
 
+    def get_exercise_amount(self):
+        return len(self.exercises)
+
     @staticmethod
     def get_exercise_stat_value(exercise, stat):
         value = exercise[stat]

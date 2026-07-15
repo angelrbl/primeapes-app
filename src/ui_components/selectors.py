@@ -116,17 +116,17 @@ def microcycle_select(macrocycle):
             st.session_state["selected_week"] = week_index
             st.rerun()
 
-def macrocycle_select():
+def macrocycle_select(index="macrocycle_index"):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
     macrocycles_data = load_json_data(MACROCYCLES_FILE)
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
-    if "macrocycle_index" not in st.session_state:
-        st.session_state["macrocycle_index"] = None
+    if index not in st.session_state:
+        st.session_state[index] = None
 
     macrocycle_name = st.selectbox(
         label="Macrocycle",
-        index=st.session_state["macrocycle_index"] if st.session_state["macrocycle_index"] is not None else None,
+        index=st.session_state[index] if st.session_state[index] is not None else None,
         accept_new_options=False,
         options=macrocycle_names
     )
@@ -138,7 +138,7 @@ def macrocycle_select():
         for macrocycle_data in macrocycles_data:
             if macrocycle_data["name"] == macrocycle_name.lower().replace(" ", "_"):
                 macrocycle = Macrocycle.from_json(macrocycle_data, microcycle_map)
-                st.session_state["macrocycle_index"] = macrocycle_names.index(macrocycle_name)
+                st.session_state[index] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
     return macrocycle
 
@@ -191,6 +191,7 @@ def main_page_stats_selector():
 
     def handle_main_page_stats_select():
         st.session_state["main_page_stats"] = st.session_state["main_page_stats_selector"]
+        st.rerun()
 
     main_page_stats = st.pills(
         label="Stats:",
