@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-from src.utils.database import get_categories_dict, get_bodyweight_history_list
+from src.utils.database import get_categories_dict, get_bodyweight_history_list, get_muscle_list
 from src.ui_components.sign_in import is_logged_in
 from src.models.Muscle import Muscle
 from datetime import datetime as dt, timedelta
@@ -42,6 +42,34 @@ def muscle_volume_chart(muscle_sets):
     )
 
     st.plotly_chart(fig, width="content", config={"displayModeBar": False})
+
+def microcycles_muscle_volume_chart(microcycles_muscle_sets, selected_muscles = []):
+    if not microcycles_muscle_sets:
+        return
+    if len(selected_muscles) == 0:
+        user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+        selected_muscles = [muscle.get_name().replace("_", "0").title() for muscle in get_muscle_list(user=user)]
+
+    df = pd.DataFrame(microcycles_muscle_sets)
+
+    filtered_df = df[df["Muscle"].isin(selected_muscles)]
+
+    fig = px.bar(
+        filtered_df,
+        x="Microcycle",
+        y="Sets",
+        color="Muscle",
+        barmode="group",
+        height=400,
+        labels={"Sets": "Sets", "Microcycle": "Microcycles", "Muscle": "Muscle Group"},
+        color_discrete_sequence=px.colors.qualitative.Pastel
+    )
+    fig.update_layout(
+        margin=dict(l=20,r=20,t=30, b=20),
+        xaxis_title=None,
+        legend=dict(orientation="h",yanchor="bottom",y=1.02,xanchor="right",x=1)
+    )
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
 def category_volume_chart(selected_categories, muscle_sets):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -106,32 +134,32 @@ def weight_evolution_chart(time_range):
     df.sort_values("date")
 
     today = dt.today().date()
-    df_filtered = df.copy()
+    filtered_df = df.copy()
 
     match(time_range):
         case "last week":
-            df_filtered = df[df["date"] >= (today - timedelta(days=7))]
+            filtered_df = df[df["date"] >= (today - timedelta(days=7))]
         case "last 30 days":
-            df_filtered = df[df["date"] >= (today - timedelta(days=30))]
+            filtered_df = df[df["date"] >= (today - timedelta(days=30))]
         case "last 90 days":
-            df_filtered = df[df["date"] >= (today - timedelta(days=90))]
+            filtered_df = df[df["date"] >= (today - timedelta(days=90))]
         case "custom":
             if "custom_date_range" not in st.session_state:
                 st.session_state["custom_date_range"] = (df["date"].min(), df["date"].max())
             custom_date_range = st.session_state["custom_date_range"]
             if isinstance(custom_date_range, tuple) and len(custom_date_range) == 2:
                 start_date, end_date = custom_date_range
-                df_filtered = df[(df["date"] >= start_date) & (df["date"] <= end_date)]
+                filtered_df = df[(df["date"] >= start_date) & (df["date"] <= end_date)]
     
-    if df_filtered.empty:
+    if filtered_df.empty:
         st.info("Not enough data to show user's bodyweight evolution.")
         return
 
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        x=df_filtered["date"],
-        y=df_filtered["weight"],
+        x=filtered_df["date"],
+        y=filtered_df["weight"],
         mode="lines+markers",
         line=dict(color="#FF4B4B", width=3),
         marker=dict(size=7, color="#FF4B4B"),

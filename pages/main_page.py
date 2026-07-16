@@ -2,8 +2,8 @@ import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards
 from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog
-from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select, macrocycle_select, macrocycle_stats_select
-from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart
+from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select, macrocycle_select, macrocycle_stats_select, muscle_multiselect
+from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart
 from src.ui_components.forms import edit_weight_evolution_form
 from src.utils.database import get_macrocycle_list
 
@@ -75,7 +75,9 @@ match st.session_state["main_page_stats"]:
                 muscle_sets = macrocycle.get_muscle_sets()
                 muscle_volume_chart(muscle_sets=muscle_sets)
             case "muscle":
-                st.write("msucle")
+                muscle_sets = macrocycle.get_microcycles_muscle_sets()
+                selected_muscles = muscle_multiselect()
+                microcycles_muscle_volume_chart(microcycles_muscle_sets=muscle_sets, selected_muscles=selected_muscles)
         
         with st.container(border=True):
             col_text, col_change = st.columns([0.75,0.25], vertical_alignment="center")

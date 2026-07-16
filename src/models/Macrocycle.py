@@ -57,6 +57,14 @@ class Macrocycle:
                 muscle_sets.update(microycle.get_muscle_sets(muscle_sets))
         return muscle_sets
 
+    def get_microcycles_muscle_sets(self):
+        microcycles_muscle_sets = []
+        for i in range(len(self.microcycles)):
+            muscle_sets = self.microcycles[i].get_muscle_sets(muscle_sets={})
+            for muscle, sets in muscle_sets.items():
+                microcycles_muscle_sets.append({"Microcycle": f"M{i+1}", "Muscle": muscle, "Sets": sets})
+        return microcycles_muscle_sets
+
     def get_description(self):
         return self.description
     def get_date(self):

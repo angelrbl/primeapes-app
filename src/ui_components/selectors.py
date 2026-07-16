@@ -1,5 +1,4 @@
 import streamlit as st
-from datetime import datetime as dt
 from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
@@ -141,6 +140,29 @@ def macrocycle_select(index="macrocycle_index"):
                 st.session_state[index] = macrocycle_names.index(macrocycle_name)
                 return macrocycle
     return macrocycle
+
+def muscle_multiselect():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    user_muscles = get_muscle_list(user)
+    muscle_names = [muscle.get_name().title().replace("_", " ") for muscle in user_muscles]
+
+    if "default_muscles" not in st.session_state:
+        st.session_state["default_muscles"] = None
+
+    def handle_change_multiselect():
+        st.session_state["default_muscles"] = st.session_state["muscles_multiselect"]
+        print(st.session_state["default_muscles"])
+
+    categories = st.multiselect(
+        label="Categories",
+        accept_new_options=False,
+        options=muscle_names,
+        default=st.session_state["default_muscles"],
+        key="muscles_multiselect",
+        on_change=handle_change_multiselect,
+        max_selections=6
+    )
+    return categories
 
 def category_multiselect():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
