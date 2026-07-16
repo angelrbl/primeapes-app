@@ -43,7 +43,7 @@ with col_table:
         microcycle_table(microcycle=microcycle)
 
 col_polar_chart, col_bar_chart = st.columns([0.4,0.6], vertical_alignment="center")
-muscle_sets = microcycle.get_muscle_sets()
+muscle_sets = microcycle.get_muscle_sets(muscle_sets={})
 with col_polar_chart:
     if muscle_sets:
         categories = category_multiselect()

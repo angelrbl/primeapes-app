@@ -51,6 +51,12 @@ class Macrocycle:
             print(microcycle.get_workouts())
         return True
 
+    def get_muscle_sets(self):
+        muscle_sets = {}
+        for microycle in self.microcycles:
+                muscle_sets.update(microycle.get_muscle_sets(muscle_sets))
+        return muscle_sets
+
     def get_description(self):
         return self.description
     def get_date(self):

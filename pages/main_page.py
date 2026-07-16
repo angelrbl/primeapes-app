@@ -2,8 +2,8 @@ import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards
 from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog
-from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_selector, macrocycle_select, macrocycle_stats_selector
-from src.ui_components.charts import weight_evolution_chart
+from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select, macrocycle_select, macrocycle_stats_select
+from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart
 from src.ui_components.forms import edit_weight_evolution_form
 from src.utils.database import get_macrocycle_list
 
@@ -48,7 +48,7 @@ st.divider()
 match st.session_state["main_page_stats"]:
     case "weight":
         st.write("##### Bodyweight evolution")
-        time_range = weight_evolution_date_selector()
+        time_range = weight_evolution_date_select()
         weight_evolution_chart(time_range=time_range)
 
         edit_button_container = st.container(horizontal_alignment="right")
@@ -62,7 +62,6 @@ match st.session_state["main_page_stats"]:
         st.write("##### Macrocycle stats")
 
         macrocycles = get_macrocycle_list(user=st.session_state["user"])
-        print(macrocycles)
         if not macrocycles:
             st.info("There are no macrocycles to show stats from.")
             st.stop()
@@ -70,7 +69,13 @@ match st.session_state["main_page_stats"]:
 
         macrocycle_stats_cards(macrocycle=macrocycle)
 
-        macrocycle_stats_selector()
+        macrocycle_stats_select()
+        match st.session_state["macrocycle_stats"]:
+            case "general":
+                muscle_sets = macrocycle.get_muscle_sets()
+                muscle_volume_chart(muscle_sets=muscle_sets)
+            case "muscle":
+                st.write("msucle")
         
         with st.container(border=True):
             col_text, col_change = st.columns([0.75,0.25], vertical_alignment="center")
@@ -78,4 +83,6 @@ match st.session_state["main_page_stats"]:
             popover = col_change.popover(label="Change macrocycle", on_change="rerun")
             with popover:
                 if popover.open:
+                    if "macrocycle_stats_index" not in st.session_state:
+                        st.session_state["macrocycle_stats_index"] = 0
                     new_macrocycle = macrocycle_select(index="macrocycle_stats_index")

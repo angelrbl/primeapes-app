@@ -191,7 +191,6 @@ def main_page_stats_selector():
 
     def handle_main_page_stats_select():
         st.session_state["main_page_stats"] = st.session_state["main_page_stats_selector"]
-        st.rerun()
 
     main_page_stats = st.pills(
         label="Stats:",
@@ -206,7 +205,7 @@ def main_page_stats_selector():
     )
     return main_page_stats
 
-def macrocycle_stats_selector():
+def macrocycle_stats_select():
     if "macrocycle_stats" not in st.session_state:
         st.session_state["macrocycle_stats"] = "general"
     
@@ -228,7 +227,7 @@ def macrocycle_stats_selector():
     )
     return macrocycle_stats
 
-def weight_evolution_date_selector():
+def weight_evolution_date_select():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     if "weight_evolution_date" not in st.session_state:
         st.session_state["weight_evolution_date"] = "forever"
