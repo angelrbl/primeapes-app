@@ -1,18 +1,1 @@
-[
-    {
-        "id": "admin",
-        "name": "Admin",
-        "weight": 99,
-        "height": 200,
-        "measurements": {},
-        "user_folder": "data/default"
-    },
-    {
-        "id": "angel",
-        "name": "\u00c1ngel",
-        "weight": 87.7,
-        "height": 178,
-        "measurements": {},
-        "user_folder": "data/users/angel"
-    }
-]
+[{"id": "admin", "name": "Admin", "weight": 99, "height": 200, "measurements": {}, "user_folder": "data/default"}, {"id": "angel", "name": "\u00c1ngel", "weight": 87.7, "height": 178, "measurements": {"date": "2026-07-17", "measurements": {"Cuello": 15.5, "Cintura": 18.4, "Biceps": 47.5}}, "user_folder": "data/users/angel"}]

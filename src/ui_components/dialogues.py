@@ -124,7 +124,13 @@ def add_measurements_dialog():
             if measurement["date"] == date_str:
                 st.info("There already are measurements for this day, select another one or edit the measurements of that day")
                 st.stop()
-        measurements_history.append({"date": date_str, "measurements": {}})
+
+        default_measurements = {}
+        if len(measurements_history) > 0:
+            for default_measurement in measurements_history[-1]["measurements"].keys():
+                default_measurements[default_measurement] = None
+
+        measurements_history.append({"date": date_str, "measurements": default_measurements})
         
         measurements_history = sorted(measurements_history, key=lambda x: dt.strptime(x["date"], '%Y-%m-%d').date())
         save_json_data(MEASUREMENTS_HISTORY_FILE, measurements_history)
