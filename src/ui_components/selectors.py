@@ -293,6 +293,22 @@ def weight_evolution_date_select():
     
     return past_date
 
+def measurements_date_select():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+
+    measurements = get_measurements_history_list(user=user)
+    measurements_dates = [measurement["date"] for measurement in measurements]
+
+    if "measurements_index" not in st.session_state:
+        st.session_state["measurements_index"] = len(measurements_dates) - 1
+
+    st.selectbox(
+        label="Date",
+        index=st.session_state["measurements_index"],
+        options=measurements_dates,
+        key="measurements_history_selector"
+    )
+
 def user_select():
     USERS_FILE = check_file("data/users.json")
     users_data = load_json_data(USERS_FILE)

@@ -1,8 +1,9 @@
 import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards
-from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog
-from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select, macrocycle_select, macrocycle_stats_select, muscle_multiselect
+from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog, add_measurements_dialog
+from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select
+from src.ui_components.selectors import macrocycle_select, macrocycle_stats_select, muscle_multiselect, measurements_date_select
 from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart
 from src.ui_components.forms import edit_weight_evolution_form
 from src.utils.database import get_macrocycle_list
@@ -58,6 +59,15 @@ match st.session_state["main_page_stats"]:
         if st.session_state.get("show_edit_weight_evo_form") == True:
             edit_weight_evolution_form()
     
+    case "measurements":
+        st.write("##### Measurements")
+        col_date, col_add_new = st.columns([0.8,0.2], vertical_alignment="bottom")
+        with col_date:
+            measurements_date = measurements_date_select()
+        with col_add_new:
+            if st.button(label="Add new", width="stretch"):
+                add_measurements_dialog()
+
     case "macrocycle":
         st.write("##### Macrocycle stats")
 

@@ -72,7 +72,7 @@ def edit_weight_evolution_form():
                 new_weight = col_weight.number_input(
                     label="Edit weight value",
                     min_value=float(1.0),
-                    value=weight,
+                    value=float(weight),
                     step=0.1,
                     label_visibility="collapsed",
                     key=f"input_weight_{row_key}"

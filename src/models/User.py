@@ -23,6 +23,9 @@ class User:
         self.weight = weight
     def set_height(self, height):
         self.height = height
+      
+    def set_measurements(self, measurements):
+        self.measurements = measurements
 
     def get_name(self):
         return self.name

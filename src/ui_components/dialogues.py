@@ -1,7 +1,7 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
 from src.utils.files import check_file
-from src.utils.database import save_json_data, load_json_data, add_weigh_in
+from src.utils.database import save_json_data, load_json_data, add_weigh_in, get_measurements_history_list
 from src.utils.auth import delete_user
 from src.ui_components.selectors import user_select
 from datetime import datetime as dt
@@ -107,3 +107,33 @@ def set_height_dialog():
                     break
             save_json_data(USERS_FILE, users_data)
             st.rerun()
+    
+@st.dialog("Add measurements")
+def add_measurements_dialog():
+    user = st.session_state["user"]
+    date = st.date_input(
+        label="Date",
+        value="today",
+        key="measurements_date_input"
+        )
+    if st.button("Add measurements"):
+        date_str = dt.strftime(date, '%Y-%m-%d')
+        MEASUREMENTS_HISTORY_FILE = check_file(f"{user.get_folder()}/measurements_history.json")
+        measurements_history = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        measurements_history.append({"date": date_str, "measurements": {}})
+        
+        measurements_history = sorted(measurements_history, key=lambda x: dt.strptime(x["date"], '%Y-%m-%d').date())
+        save_json_data(MEASUREMENTS_HISTORY_FILE, measurements_history)
+
+        if measurements_history[-1]["date"] == date_str:
+            measurements = measurements_history[-1]["measurements"]
+            user.set_measurements(measurements=measurements)
+
+            USERS_FILE = check_file(f"data/users.json")
+            users_data = load_json_data(USERS_FILE)
+            for user_data in users_data:
+                if user_data["id"] == user.get_id():
+                    user_data["measurements"] = measurements
+                    break
+            save_json_data(USERS_FILE, users_data)
+        st.rerun()

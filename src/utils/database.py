@@ -92,6 +92,10 @@ def get_bodyweight_history_list(user):
     BODYWEIGHT_HISTORY_FILE = check_file(f"{user.get_folder()}/bodyweight_history.json")
     return load_json_data(BODYWEIGHT_HISTORY_FILE)
 
+def get_measurements_history_list(user):
+    MEASUREMENTS_HISTORY_FILE = check_file(f"{user.get_folder()}/measurements_history.json")
+    return load_json_data(MEASUREMENTS_HISTORY_FILE)
+
 def add_weigh_in(user, weight, date = None):
     if date is None:
         date = dt.today().date()
