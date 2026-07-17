@@ -356,3 +356,78 @@ def macrocycle_table(macrocycle):
                         microcycles_data[i] = microcycle.to_json()
             if save_json_data(MICROCYCLE_FILE, microcycles_data):
                 st.rerun()
+
+def measurements_table(measurements_data):
+    if measurements_data is None:
+        return
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    MEASUREMENTS_HISTORY_FILE = check_file(f"{user.get_folder()}/measurements_history.json")
+    USERS_FILE = "data/users.json"
+
+    measurements = measurements_data["measurements"]
+    table_data = []
+    
+    if not measurements:
+        table_data.append({"body_part": None, "measure": None})
+
+    for body_part, measure in measurements.items():
+        table_data.append({"body_part": body_part, "measure": measure})
+
+    edited_data = st.data_editor(
+        data=table_data,
+        column_config={
+            "measure": st.column_config.NumberColumn(
+                "Measure (cm)",
+                help="Measure of the body part in cm",
+                min_value=0,
+                step=0.1,
+                alignment="center"
+            ),
+            "body_part": st.column_config.TextColumn(
+                label="Body Part",
+                alignment="center",
+                required=True
+            )
+        },
+        hide_index=True,
+        num_rows="dynamic"
+    )
+    
+    edited_measurements = {}
+    for measurement in edited_data:
+        edited_measurements[measurement["body_part"]] = measurement["measure"]
+        
+    col1, col2 = st.columns(2, gap="small")
+    #SAVE
+    if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
+        user_measurements_data = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        for i in range(len(user_measurements_data)):
+            if user_measurements_data[i]["date"] == measurements_data["date"]:
+                user_measurements_data[i]["measurements"] = edited_measurements
+        save_json_data(MEASUREMENTS_HISTORY_FILE, user_measurements_data)
+        if user_measurements_data[-1]["date"] == measurements_data["date"]:
+            user.set_measurements(edited_measurements)
+            users_data = load_json_data(USERS_FILE)
+            for i in range(len(users_data)):
+               if users_data[i]["id"] == user.get_id():
+                   users_data[i] = user.to_json()
+                   break
+            save_json_data(USERS_FILE, users_data)
+    #DELETE
+    if col2.button("Delete measurements", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
+        user_measurements_data = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        if user_measurements_data[-1]["date"] == measurements_data["date"]:
+            previous_data = user_measurements_data[-2] if len(user_measurements_data) > 1 else {}
+            user.set_measurements(previous_data)
+            users_data = load_json_data(USERS_FILE)
+            for i in range(len(users_data)):
+               if users_data[i]["id"] == user.get_id():
+                   users_data[i] = user.to_json()
+                   break
+            save_json_data(USERS_FILE, users_data)
+
+        updated_measurements = [m for m in user_measurements_data if m["date"] != measurements_data["date"]]
+        if save_json_data(MEASUREMENTS_HISTORY_FILE, updated_measurements):
+            st.session_state["measurements_index"] = len(user_measurements_data) - 1
+
+        st.rerun()

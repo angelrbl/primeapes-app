@@ -6,6 +6,7 @@ from src.ui_components.selectors import bodyweight_past_date_selector, main_page
 from src.ui_components.selectors import macrocycle_select, macrocycle_stats_select, muscle_multiselect, measurements_date_select
 from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart
 from src.ui_components.forms import edit_weight_evolution_form
+from src.ui_components.tables import measurements_table
 from src.utils.database import get_macrocycle_list
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
@@ -63,10 +64,12 @@ match st.session_state["main_page_stats"]:
         st.write("##### Measurements")
         col_date, col_add_new = st.columns([0.8,0.2], vertical_alignment="bottom")
         with col_date:
-            measurements_date = measurements_date_select()
+            measurements_data = measurements_date_select()
         with col_add_new:
             if st.button(label="Add new", width="stretch"):
                 add_measurements_dialog()
+        
+        measurements_table(measurements_data=measurements_data)
 
     case "macrocycle":
         st.write("##### Macrocycle stats")
