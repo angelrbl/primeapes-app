@@ -1,7 +1,7 @@
 import streamlit as st
 from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_bodyweight_history_list, get_measurements_history_list
+from src.utils.database import get_bodyweight_history_list, get_measurements_history_list, get_macrocycle_list
 from datetime import datetime as dt, timedelta as td
 
 def workout_total_stat_card(workout, stat, unit=""):
@@ -106,8 +106,15 @@ def weight_delta_card(past_date):
     margin_map = {
         "yesterday": 1,
         "last week": 3,
-        "last month": 5
+        "last month": 5,
+        "start of macrocycle": 5
     }
+    macrocycles = get_macrocycle_list(user=user)
+    if len(macrocycles) > 0:
+        today = dt.today().date()
+        macrocycle_start_date = dt.strptime(macrocycles[st.session_state.get("macrocycle_stats_index", -1)].get_start_date(), '%Y-%m-%d').date()
+        past_date_map["start of macrocycle"] = (today - macrocycle_start_date).days
+
     num_of_days = past_date_map[past_date]
     max_margin_days = margin_map[past_date]
 
@@ -155,8 +162,14 @@ def measurements_delta_card(past_date, is_gain, last_entry = None):
     margin_map = {
         "yesterday": 1,
         "last week": 3,
-        "last month": 5
+        "start of macrocycle": 5
     }
+    macrocycles = get_macrocycle_list(user=user)
+    if len(macrocycles) > 0:
+        today = dt.today().date()
+        macrocycle_start_date = dt.strptime(macrocycles[st.session_state.get("macrocycle_stats_index", -1)].get_start_date(), '%Y-%m-%d').date()
+        past_date_map["start of macrocycle"] = (today - macrocycle_start_date).days
+
     num_of_days = past_date_map[past_date]
     max_margin_days = margin_map[past_date]
 

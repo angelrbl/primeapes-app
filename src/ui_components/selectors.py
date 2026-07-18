@@ -189,6 +189,12 @@ def delta_past_date_selector(session_state):
     
     options = ["yesterday", "last week", "last month"]
 
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    macrocycles = get_macrocycle_list(user=user)
+    if len(macrocycles) > 0:
+        options.append("start of macrocycle")
+
+
     def handle_past_date_select():
         st.session_state[session_state] = st.session_state[f"{session_state}_past_date_selector"]
 
@@ -256,6 +262,10 @@ def weight_evolution_date_select():
         st.session_state["custom_range"] = False
 
     options = ["last week", "last 30 days", "last 90 days", "forever", "custom"]
+
+    macrocycles = get_macrocycle_list(user=user)
+    if len(macrocycles) > 0:
+        options.insert(-2, "start of macrocycle")
 
     def handle_date_select():
         st.session_state["weight_evolution_date"] = st.session_state["weight_evo_date_selector"]

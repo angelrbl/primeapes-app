@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-from src.utils.database import get_categories_dict, get_bodyweight_history_list, get_muscle_list
+from src.utils.database import get_categories_dict, get_bodyweight_history_list, get_muscle_list, get_macrocycle_list
 from src.ui_components.sign_in import is_logged_in
 from src.models.Muscle import Muscle
 from datetime import datetime as dt, timedelta
@@ -124,6 +124,9 @@ def category_volume_chart(selected_categories, muscle_sets):
 def weight_evolution_chart(time_range):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     user_bodyweight_history = get_bodyweight_history_list(user=user)
+    user_macrocycles = get_macrocycle_list(user=user)
+    if len(user_macrocycles) > 0:
+        selected_macrocycle = user_macrocycles[st.session_state.get("macrocycle_stats_index", -1)]
 
     if len(user_bodyweight_history) == 0:
         st.info("Not enough data to show user's bodyweight evolution.")
@@ -143,6 +146,8 @@ def weight_evolution_chart(time_range):
             filtered_df = df[df["date"] >= (today - timedelta(days=30))]
         case "last 90 days":
             filtered_df = df[df["date"] >= (today - timedelta(days=90))]
+        case "start of macrocycle":
+            filtered_df = df[df["date"] >= (dt.strptime(selected_macrocycle.get_start_date(), '%Y-%m-%d').date())]
         case "custom":
             if "custom_date_range" not in st.session_state:
                 st.session_state["custom_date_range"] = (df["date"].min(), df["date"].max())

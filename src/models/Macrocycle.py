@@ -67,7 +67,7 @@ class Macrocycle:
 
     def get_description(self):
         return self.description
-    def get_date(self):
+    def get_start_date(self):
         return self.start_date
     def get_name(self):
         return self.name

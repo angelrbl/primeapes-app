@@ -23,7 +23,7 @@ if not macrocycle:
 # Show basic data from your macrocycle
 col1, col2 = st.columns([0.7, 0.3])
 col1.write(f"###### Showing - {macrocycle.get_name().title().replace("_", " ")}")
-col2.write(f"###### Starting date: {macrocycle.get_date()}")
+col2.write(f"###### Starting date: {macrocycle.get_start_date()}")
 description = macrocycle.get_description()
 if description:
     with st.expander(label="Description"):
