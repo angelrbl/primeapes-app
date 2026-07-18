@@ -1,7 +1,7 @@
 import streamlit as st
 from src.models.Workout import Workout
 from src.ui_components.sign_in import is_logged_in
-from src.utils.database import get_bodyweight_history_list
+from src.utils.database import get_bodyweight_history_list, get_measurements_history_list
 from datetime import datetime as dt, timedelta as td
 
 def workout_total_stat_card(workout, stat, unit=""):
@@ -142,5 +142,68 @@ def weight_delta_card(past_date):
         value=value,
         delta=f"{"+" if delta_value >= 0 else ""}{delta_value:.2f} %",
         height="stretch",
+        border=True
+    )
+
+def measurements_delta_card(past_date, is_gain, last_entry = None):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    past_date_map = {
+        "yesterday": 1,
+        "last week": 7,
+        "last month": 30
+    }
+    margin_map = {
+        "yesterday": 1,
+        "last week": 3,
+        "last month": 5
+    }
+    num_of_days = past_date_map[past_date]
+    max_margin_days = margin_map[past_date]
+
+    user_measurements_history = get_measurements_history_list(user=user)
+    if len(user_measurements_history) <= 0:
+        return
+    if not last_entry:
+        last_entry = user_measurements_history[-1]
+    target_date = dt.strptime(last_entry["date"], '%Y-%m-%d').date() - td(days=num_of_days)
+
+    target_measurements = None
+    min_diff_days = max_margin_days + 1
+
+    for entry in user_measurements_history:
+        entry_date = dt.strptime(entry["date"], '%Y-%m-%d').date()
+        diff_days = abs((entry_date - target_date).days)
+
+        if diff_days <= max_margin_days and diff_days < min_diff_days:
+            min_diff_days = diff_days
+            target_measurements = entry["measurements"]
+
+    value = ['N/A', 'N/A']
+    max_diff = 0
+    delta_value = 0
+    if target_measurements:
+        for body_part, measure in target_measurements.items():
+            if not measure:
+                measure = 0
+            elif body_part in last_entry["measurements"].keys():
+                last_measurements = last_entry["measurements"][body_part]
+                if not last_measurements:
+                    last_measurements = measure
+                diff = last_measurements - measure
+                if is_gain == False and max_diff >= diff:
+                    max_diff = diff
+                    value[0] = body_part
+                    value[1] = f"{diff} cm"
+                    delta_value = (max_diff / measure) * 100
+                elif is_gain == True and max_diff <= diff:
+                    max_diff = diff
+                    value[0] = body_part
+                    value[1] = f"+{diff} cm"
+                    delta_value = (max_diff / measure) * 100
+    
+    st.metric(
+        label=f"{value[0]} {'gain' if is_gain is True else 'loss'} since {past_date}",
+        value=value[1],
+        delta=f"{"+" if is_gain == True else "-"}{delta_value:.2f} %",
         border=True
     )

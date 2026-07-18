@@ -1,8 +1,8 @@
 import streamlit as st
 from src.ui_components.sign_in import is_logged_in
-from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards
+from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards, measurements_delta_card
 from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog, add_measurements_dialog
-from src.ui_components.selectors import bodyweight_past_date_selector, main_page_stats_selector, weight_evolution_date_select
+from src.ui_components.selectors import delta_past_date_selector, main_page_stats_selector, weight_evolution_date_select
 from src.ui_components.selectors import macrocycle_select, macrocycle_stats_select, muscle_multiselect, measurements_date_select
 from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart
 from src.ui_components.forms import edit_weight_evolution_form
@@ -29,7 +29,7 @@ with col_weight_delta:
     if "bodyweight_past_date" not in st.session_state:
         st.session_state["bodyweight_past_date"] = "last week"
     weight_delta_card(st.session_state["bodyweight_past_date"])
-    bodyweight_past_date_selector()
+    delta_past_date_selector(session_state="bodyweight_past_date")
 
 with col_height:
     height_card()
@@ -62,14 +62,29 @@ match st.session_state["main_page_stats"]:
     
     case "measurements":
         st.write("##### Measurements")
-        col_date, col_add_new = st.columns([0.8,0.2], vertical_alignment="bottom")
-        with col_date:
-            measurements_data = measurements_date_select()
-        with col_add_new:
-            if st.button(label="Add new", width="stretch"):
-                add_measurements_dialog()
+        st.space("small")
         
-        measurements_table(measurements_data=measurements_data)
+        with st.expander(label="See/edit measurements: ", expanded=True, icon=":material/straighten:"):
+            col_date, col_add_new = st.columns([0.8,0.2], vertical_alignment="bottom")
+            with col_date:
+                measurements_data = measurements_date_select()
+            with col_add_new:
+                if st.button(label="Add new", width="stretch"):
+                    add_measurements_dialog()
+            if not measurements_data:
+                st.stop()
+            measurements_table(measurements_data=measurements_data)
+        
+        st.divider()
+
+        st.write("Greatest changes since:")
+        if "measurements_past_date" not in st.session_state:
+            st.session_state["measurements_past_date"] = "last week"
+        col_gain, col_loss = st.columns(2, gap="medium", vertical_alignment="top")
+        with col_gain: measurements_delta_card(past_date=st.session_state["measurements_past_date"], is_gain=True, last_entry=measurements_data)
+        with col_loss:
+            measurements_delta_card(past_date=st.session_state["measurements_past_date"], is_gain=False, last_entry=measurements_data)
+            delta_past_date_selector(session_state="measurements_past_date")
 
     case "macrocycle":
         st.write("##### Macrocycle stats")

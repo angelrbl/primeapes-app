@@ -151,7 +151,6 @@ def muscle_multiselect():
 
     def handle_change_multiselect():
         st.session_state["default_muscles"] = st.session_state["muscles_multiselect"]
-        print(st.session_state["default_muscles"])
 
     categories = st.multiselect(
         label="Categories",
@@ -184,22 +183,22 @@ def category_multiselect():
     )
     return categories
 
-def bodyweight_past_date_selector():
-    if "bodyweight_past_date" not in st.session_state:
-        st.session_state["bodyweight_past_date"] = "last week"
+def delta_past_date_selector(session_state):
+    if session_state not in st.session_state:
+        st.session_state[session_state] = "last week"
     
     options = ["yesterday", "last week", "last month"]
 
     def handle_past_date_select():
-        st.session_state["bodyweight_past_date"] = st.session_state["past_date_selector"]
+        st.session_state[session_state] = st.session_state[f"{session_state}_past_date_selector"]
 
     past_date = st.selectbox(
         label="Past date",
         label_visibility="collapsed",
         options=options,
         accept_new_options=False,
-        index=options.index(st.session_state["bodyweight_past_date"]),
-        key="past_date_selector",
+        index=options.index(st.session_state[session_state]),
+        key=f"{session_state}_past_date_selector",
         on_change=handle_past_date_select
     )
     
