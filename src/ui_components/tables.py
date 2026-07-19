@@ -371,7 +371,7 @@ def measurements_table(measurements_data):
         table_data.append({"body_part": None, "measure": None})
 
     for body_part, measure in measurements.items():
-        table_data.append({"body_part": body_part, "measure": measure})
+        table_data.append({"body_part": body_part.replace("_", " ").title(), "measure": measure})
 
     edited_data = st.data_editor(
         data=table_data,
@@ -395,7 +395,8 @@ def measurements_table(measurements_data):
     
     edited_measurements = {}
     for measurement in edited_data:
-        edited_measurements[measurement["body_part"]] = measurement["measure"]
+        if measurement["body_part"]:
+            edited_measurements[measurement["body_part"].lower().replace(" ", "_")] = measurement["measure"]
         
     col1, col2 = st.columns(2, gap="small")
     #SAVE

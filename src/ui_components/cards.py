@@ -205,12 +205,12 @@ def measurements_delta_card(past_date, is_gain, last_entry = None):
                 diff = last_measurements - measure
                 if is_gain == False and max_diff >= diff:
                     max_diff = diff
-                    value[0] = body_part
+                    value[0] = body_part.replace("_", " ").title()
                     value[1] = f"{diff} cm"
                     delta_value = (max_diff / measure) * 100
                 elif is_gain == True and max_diff <= diff:
                     max_diff = diff
-                    value[0] = body_part
+                    value[0] = body_part.replace("_", " ").title()
                     value[1] = f"+{diff} cm"
                     delta_value = (max_diff / measure) * 100
     

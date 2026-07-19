@@ -327,7 +327,7 @@ def measurements_date_select():
 def user_select():
     USERS_FILE = check_file("data/users.json")
     users_data = load_json_data(USERS_FILE)
-    user_ids = [user_data["user_id"] for user_data in users_data]
+    user_ids = [user_data["id"] for user_data in users_data]
     user_id = st.selectbox(
         label="User",
         index=None,
@@ -338,7 +338,7 @@ def user_select():
     user = None
     if user_id:
         for user_data in users_data:
-            if user_data["user_id"] == user_id:
+            if user_data["id"] == user_id:
                 user = User.from_json(user_data)
                 return user
     return user
