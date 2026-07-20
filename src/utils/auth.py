@@ -1,9 +1,8 @@
 import hashlib
-from src.utils.files import initialize_user_folders, check_file, delete_folder
 from src.models.User import User
-from src.utils.database import load_json_data, save_json_data
+from src.utils.database import load_json_data, save_json_data, delete_folder, check_file, initialize_user_folders
 
-CREDENTIALS_FILE = check_file("data/user_credentials.json")
+CREDENTIALS_FILE = check_file("data/user_credentials.json", file_type=dict)
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -15,7 +14,7 @@ def check_credentials(username, password):
     return False
 
 def create_user_account(username, password):
-    credentials = load_json_data(CREDENTIALS_FILE)
+    credentials = load_json_data(CREDENTIALS_FILE, default_type=dict)
     #username already exists
     if username in credentials:
         return False
@@ -31,7 +30,8 @@ def initialize_new_user(user_id, name, weight, height):
     user = User(id=user_id, name=name, weight=weight, height=height)
     users_data.append(user.to_json())
     save_json_data(USER_FILE, users_data)
-    initialize_user_folders(user)
+    print(users_data)
+    initialize_user_folders(user, bodyweight=weight)
     return user
 
 def initialize_user(user_id):

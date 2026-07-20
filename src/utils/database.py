@@ -1,22 +1,100 @@
-import json
 from datetime import datetime as dt
-from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
 from src.models.Microcycle import Microcycle
 from src.models.Macrocycle import Macrocycle
+from supabase import Client, create_client
+import streamlit as st
+import json
 
-def load_json_data(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-            file_data = json.load(f)
-    return file_data
+@st.cache_resource
+def init_supabase() -> Client:
+    url = st.secrets["SUPABASE_URL"]
+    key = st.secrets["SUPABASE_KEY"]
+    return create_client(url, key)
+
+supabase = init_supabase()
+if supabase:
+    print("SUPABASE INITIALIZED SUCCESFULLY!")
+BUCKET_NAME = "app-data"
+
+def load_json_data(file_path, default_type=list):
+    try:
+        response = supabase.storage.from_(BUCKET_NAME).download(file_path)
+        return json.loads(response.decode("utf-8"))
+    except Exception as e:
+        print(f"File not found or empty: {file_path}. Error: {e}")
+        return {} if default_type == dict else []
 
 def save_json_data(file_path, file_data):
-    with open(file_path, 'w', encoding='utf-8') as f:
-        json.dump(file_data, f, default=str)
+    clean_path = file_path.strip("/")
+    json_bytes = json.dumps(file_data, indent=4, ensure_ascii=False).encode("utf-8")
+    
+    try:
+        supabase.storage.from_(BUCKET_NAME).upload(
+            path=clean_path,
+            file=json_bytes,
+            file_options={
+                "content-type": "application/json",
+                "upsert": "true"
+            }
+        )
         return True
-    return False
+    except Exception as e:
+        try:
+            supabase.storage.from_(BUCKET_NAME).update(
+                path=clean_path,
+                file=json_bytes,
+                file_options={"content-type": "application/json"}
+            )
+            return True
+        except Exception as err:
+            st.error(f"Error while saving '{clean_path}' on Supabase: {err}")
+            return False
+    
+
+def delete_folder(FILE_PATH):
+    try:
+        files_in_folder = supabase.storage.from_(BUCKET_NAME).list(FILE_PATH)
+
+        if files_in_folder:
+            files_to_delete = [f"{FILE_PATH}/{f['name']}" for f in files_in_folder]
+            supabase.storage.from_(BUCKET_NAME).remove(files_to_delete)
+
+        return True
+    except Exception as e:
+        print(f"Error deleting folder {FILE_PATH} from Supabase: {e}")
+        return False
+
+def check_file(FILE_PATH, file_type = list):
+    CLEAN_PATH = FILE_PATH.strip("/")
+
+    if file_type == dict:
+        data = load_json_data(CLEAN_PATH, default_type=dict)
+        if data == {}:
+            save_json_data(CLEAN_PATH, {})
+    else:
+        data = load_json_data(CLEAN_PATH)
+
+        if data == []:
+            save_json_data(CLEAN_PATH, [])
+        
+    return CLEAN_PATH
+
+def initialize_user_folders(user, bodyweight):
+    user_folder = user.get_folder()
+    default_folder = f"data/default"
+    
+    default_muscles = load_json_data(f"{default_folder}/muscles.json")
+    default_exercises = load_json_data(f"{default_folder}/exercises.json")
+    
+    if default_muscles:
+        save_json_data(f"{user_folder}/muscles.json", default_muscles)
+    if default_exercises:
+        save_json_data(f"{user_folder}/exercises.json", default_exercises)
+    if bodyweight:
+        save_json_data(f"{user_folder}/bodyweight_history.json", [{"date": dt.today().date().strftime('%Y-%m-%d'), "weight": bodyweight}])
 
 def get_muscle_list(user):
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")

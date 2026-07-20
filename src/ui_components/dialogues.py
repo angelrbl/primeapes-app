@@ -1,7 +1,6 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
-from src.utils.files import check_file
-from src.utils.database import save_json_data, load_json_data, add_weigh_in
+from src.utils.database import save_json_data, load_json_data, add_weigh_in, check_file
 from src.utils.auth import delete_user
 from src.ui_components.selectors import user_select
 from datetime import datetime as dt

@@ -1,6 +1,5 @@
 import streamlit as st
-from src.utils.database import get_bodyweight_history_list, save_json_data
-from src.utils.files import check_file
+from src.utils.database import get_bodyweight_history_list, save_json_data, check_file
 from math import ceil
 from datetime import datetime as dt
 

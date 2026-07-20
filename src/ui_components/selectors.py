@@ -1,5 +1,4 @@
 import streamlit as st
-from src.utils.files import check_file
 from src.models.Muscle import Muscle
 from src.models.Exercise import Exercise
 from src.models.Workout import Workout
