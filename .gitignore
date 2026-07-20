@@ -1,5 +1,13 @@
 # .gitignore
-.streamlit/secrets.toml
 __pycache__/
-*/__pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+.env
+.streamlit/secrets.toml
+.vscode
+
+venv/
+.venv/
+env/
