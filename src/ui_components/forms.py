@@ -1,5 +1,5 @@
 import streamlit as st
-from src.utils.database import get_bodyweight_history_list, save_json_data, check_file
+from src.utils.database import get_bodyweight_history_list, save_data_fast, check_file
 from math import ceil
 from datetime import datetime as dt
 
@@ -83,7 +83,7 @@ def edit_weight_evolution_form():
                             if original_entry["date"] == user_bodyweight_history[-1]["date"]:
                                 user.set_weight(new_weight)
                             break
-                    save_json_data(BODYWEIGHT_HISTORY_FILE, user_bodyweight_history)
+                    save_data_fast(BODYWEIGHT_HISTORY_FILE, user_bodyweight_history)
                     st.session_state["editing_weight_date"] = None
                     st.rerun()
                 if col_btn2.button(label="", icon=":material/close:", key=f"cancel_weight_{row_key}", help="Cancel"):
@@ -101,7 +101,7 @@ def edit_weight_evolution_form():
                         updated_bodyweight_history = [item for item in user_bodyweight_history if item["date"] != date]
                         if updated_bodyweight_history[-1]["date"] != user_bodyweight_history[-1]["date"]:
                             user.set_weight(updated_bodyweight_history[-1]["weight"])
-                        save_json_data(BODYWEIGHT_HISTORY_FILE, updated_bodyweight_history)
+                        save_data_fast(BODYWEIGHT_HISTORY_FILE, updated_bodyweight_history)
                         st.rerun()
             
         if st.button("Save changes and close", width="stretch", key="save_and_close_edit_bodyweight_evo"):

@@ -31,19 +31,19 @@ def muscle_table(muscle):
     col1, col2 = st.columns(2, gap="small")
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
-        muscles_data = load_json_data(MUSCLES_FILE)
+        muscles_data = get_data_fast(MUSCLES_FILE)
         if muscle.set_categories(edited_data[0]["Categories"]):
             for i in range(len(muscles_data)):
                 if muscle.get_name() == muscles_data[i]["name"]:
                     muscles_data[i] = muscle.to_json()
-            save_json_data(MUSCLES_FILE, muscles_data)
+            save_data_fast(MUSCLES_FILE, muscles_data)
     #DELETE
     if col2.button("Delete muscle", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
-        muscles_data = load_json_data(MUSCLES_FILE)
+        muscles_data = get_data_fast(MUSCLES_FILE)
         for muscle_json in muscles_data:
             if muscle.get_name() == muscle_json["name"]:
                 muscles_data.remove(muscle_json)
-        if save_json_data(MUSCLES_FILE, muscles_data):
+        if save_data_fast(MUSCLES_FILE, muscles_data):
             st.session_state["muscle_index"] = None
             st.rerun()
 
@@ -81,7 +81,7 @@ def exercise_table(exercise):
     col1, col2 = st.columns(2, gap="small")
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="exercise_save_button", width="stretch"):
-        exercises_data = load_json_data(EXERCISES_FILE)
+        exercises_data = get_data_fast(EXERCISES_FILE)
 
         user_muscles = get_muscle_list(user)
         muscle_map = {m.get_name(): m for m in user_muscles}
@@ -94,14 +94,14 @@ def exercise_table(exercise):
         for i in range(len(exercises_data)):
             if exercise.get_name() == exercises_data[i]["name"]:
                 exercises_data[i] = exercise.to_json()
-        save_json_data(EXERCISES_FILE, exercises_data)
+        save_data_fast(EXERCISES_FILE, exercises_data)
     #DELETE
     if col2.button("Delete exercise", icon=":material/delete:", key="exercise_delete_button", width="stretch"):
-        exercises_data = load_json_data(EXERCISES_FILE)
+        exercises_data = get_data_fast(EXERCISES_FILE)
         for exercise_data in exercises_data:
             if exercise.get_name() == exercise_data["name"]:
                 exercises_data.remove(exercise_data)
-        if save_json_data(EXERCISES_FILE, exercises_data):
+        if save_data_fast(EXERCISES_FILE, exercises_data):
             st.session_state["exercise_index"] = None
             st.rerun() 
 
@@ -187,7 +187,7 @@ def workout_table(workout):
     col1, col2 = st.columns(2)
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="workout_save_button", width="stretch"):
-        workouts_data = load_json_data(WORKOUTS_FILE)
+        workouts_data = get_data_fast(WORKOUTS_FILE)
         exercise_map = {ex.get_name(): ex for ex in user_exercises}
         edited_exercises = [
             Workout.exercise_from_json(exercise_data=exercise_data, exercise_map=exercise_map) for exercise_data in edited_data
@@ -197,14 +197,14 @@ def workout_table(workout):
         for i in range(len(workouts_data)):
             if workout.get_name() == workouts_data[i]["name"]:
                 workouts_data[i] = workout.to_json()
-        save_json_data(WORKOUTS_FILE, workouts_data)
+        save_data_fast(WORKOUTS_FILE, workouts_data)
     #DELETE
     if col2.button("Delete workout", icon=":material/delete:", key="workout_delete_button", width="stretch"):
-        workouts_data = load_json_data(WORKOUTS_FILE)
+        workouts_data = get_data_fast(WORKOUTS_FILE)
         for workout_data in workouts_data:
             if workout.get_name() == workout_data["name"]:
                 workouts_data.remove(workout_data)
-        save_json_data(WORKOUTS_FILE, workouts_data)
+        save_data_fast(WORKOUTS_FILE, workouts_data)
         if state_key in st.session_state:
             del st.session_state[state_key]
             st.session_state["workout_index"] = None
@@ -251,7 +251,7 @@ def microcycle_table(microcycle):
     col_save, col_clear = st.columns(2)
     #SAVE
     if col_save.button(label="Save changes",icon=":material/save:", key="microcycle_save_button", width="stretch"):
-        microcycles_data = load_json_data(MICROCYCLE_FILE)
+        microcycles_data = get_data_fast(MICROCYCLE_FILE)
         workout_map = {wrk.get_name(): wrk for wrk in user_workouts}
         
         for day, workout_name in edited_data[0].items():
@@ -263,18 +263,18 @@ def microcycle_table(microcycle):
         for i in range(len(microcycles_data)):
             if microcycle.get_id() == microcycles_data[i]["id"]:
                 microcycles_data[i] = microcycle.to_json()
-        if save_json_data(MICROCYCLE_FILE, microcycles_data):
+        if save_data_fast(MICROCYCLE_FILE, microcycles_data):
             st.rerun()
     #DELETE
     if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="microcycle_clear_button", width="stretch"):
-        microcycles_data = load_json_data(MICROCYCLE_FILE)
+        microcycles_data = get_data_fast(MICROCYCLE_FILE)
 
         microcycle.clear_workouts()
 
         for i in range(len(microcycles_data)):
             if microcycle.get_id() == microcycles_data[i]["id"]:
                 microcycles_data[i] = microcycle.to_json()
-        if save_json_data(MICROCYCLE_FILE, microcycles_data):
+        if save_data_fast(MICROCYCLE_FILE, microcycles_data):
             st.rerun()
 
 def macrocycle_table(macrocycle):
@@ -344,7 +344,7 @@ def macrocycle_table(macrocycle):
             )
     with col_clear:
         if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="macrocycle_clear_button", width="stretch"):
-            microcycles_data = load_json_data(MICROCYCLE_FILE)
+            microcycles_data = get_data_fast(MICROCYCLE_FILE)
 
             macrocycle.clear_microcycles()
 
@@ -353,7 +353,7 @@ def macrocycle_table(macrocycle):
                 for i in range(len(microcycles_data)):
                     if microcycle.get_id() == microcycles_data[i]["id"]:
                         microcycles_data[i] = microcycle.to_json()
-            if save_json_data(MICROCYCLE_FILE, microcycles_data):
+            if save_data_fast(MICROCYCLE_FILE, microcycles_data):
                 st.rerun()
 
 def measurements_table(measurements_data):
@@ -400,34 +400,34 @@ def measurements_table(measurements_data):
     col1, col2 = st.columns(2, gap="small")
     #SAVE
     if col1.button("Save changes", icon=":material/save:", key="muscle_save_button", width="stretch"):
-        user_measurements_data = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        user_measurements_data = get_data_fast(MEASUREMENTS_HISTORY_FILE)
         for i in range(len(user_measurements_data)):
             if user_measurements_data[i]["date"] == measurements_data["date"]:
                 user_measurements_data[i]["measurements"] = edited_measurements
-        save_json_data(MEASUREMENTS_HISTORY_FILE, user_measurements_data)
+        save_data_fast(MEASUREMENTS_HISTORY_FILE, user_measurements_data)
         if user_measurements_data[-1]["date"] == measurements_data["date"]:
             user.set_measurements(edited_measurements)
-            users_data = load_json_data(USERS_FILE)
+            users_data = get_data_fast(USERS_FILE)
             for i in range(len(users_data)):
                if users_data[i]["id"] == user.get_id():
                    users_data[i] = user.to_json()
                    break
-            save_json_data(USERS_FILE, users_data)
+            save_data_fast(USERS_FILE, users_data)
     #DELETE
     if col2.button("Delete measurements", icon=":material/delete:", key="muscle_delete_button", width="stretch"):
-        user_measurements_data = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        user_measurements_data = get_data_fast(MEASUREMENTS_HISTORY_FILE)
         if user_measurements_data[-1]["date"] == measurements_data["date"]:
             previous_data = user_measurements_data[-2] if len(user_measurements_data) > 1 else {}
             user.set_measurements(previous_data)
-            users_data = load_json_data(USERS_FILE)
+            users_data = get_data_fast(USERS_FILE)
             for i in range(len(users_data)):
                if users_data[i]["id"] == user.get_id():
                    users_data[i] = user.to_json()
                    break
-            save_json_data(USERS_FILE, users_data)
+            save_data_fast(USERS_FILE, users_data)
 
         updated_measurements = [m for m in user_measurements_data if m["date"] != measurements_data["date"]]
-        if save_json_data(MEASUREMENTS_HISTORY_FILE, updated_measurements):
+        if save_data_fast(MEASUREMENTS_HISTORY_FILE, updated_measurements):
             st.session_state["measurements_index"] = len(user_measurements_data) - 1
 
         st.rerun()

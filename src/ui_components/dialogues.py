@@ -1,6 +1,6 @@
 import streamlit as st
 from src.models.Macrocycle import Macrocycle
-from src.utils.database import save_json_data, load_json_data, add_weigh_in, check_file
+from src.utils.database import save_data_fast, get_data_fast, add_weigh_in, check_file
 from src.utils.auth import delete_user
 from src.ui_components.selectors import user_select
 from datetime import datetime as dt
@@ -48,26 +48,26 @@ def add_macrocycle_dialog():
             user = st.session_state["user"]
             #SAVE MACROCYCLE
             MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
-            macrocycles_data = load_json_data(MACROCYCLES_FILE)
+            macrocycles_data = get_data_fast(MACROCYCLES_FILE)
             for macrocycle_data in macrocycles_data:
                 if macrocycle_data["name"] == name.lower().replace(" ", "_"):
                     st.error("This name is already used by another macrocycle, please try another one.")
                     st.stop()
             macrocycle = Macrocycle(
                 name=name.lower().replace(" ", "_"),
-                start_date=start_date,
+                start_date=start_date.strftime("%Y-%m-%d"),
                 description=description,
                 length=macrocycle_length,
                 microcycle_length=microcycle_length)
             macrocycles_data.append(macrocycle.to_json())
             macrocycles_data = sorted(macrocycles_data, key=lambda x: dt.strptime(x["start_date"], '%Y-%m-%d').date())
-            save_json_data(MACROCYCLES_FILE, macrocycles_data)
+            save_data_fast(MACROCYCLES_FILE, macrocycles_data)
             #SAVE MICROCYCLES
             MICROCYCLES_FILE = check_file(f"{user.get_folder()}/microcycles.json")
-            microcycles_data = load_json_data(MICROCYCLES_FILE)
+            microcycles_data = get_data_fast(MICROCYCLES_FILE)
             for microcycle in macrocycle.get_microcycles():
                 microcycles_data.append(microcycle.to_json()) 
-            if save_json_data(MICROCYCLES_FILE, microcycles_data):
+            if save_data_fast(MICROCYCLES_FILE, microcycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1
                 st.rerun()
 
@@ -99,12 +99,12 @@ def set_height_dialog():
             user = st.session_state["user"]
             user.set_height(height=height)
 
-            users_data = load_json_data(USERS_FILE)
+            users_data = get_data_fast(USERS_FILE)
             for user_data in users_data:
                 if user_data["id"] == user.get_id():
                     user_data["height"] = height
                     break
-            save_json_data(USERS_FILE, users_data)
+            save_data_fast(USERS_FILE, users_data)
             st.rerun()
     
 @st.dialog("Add measurements")
@@ -118,7 +118,7 @@ def add_measurements_dialog():
     if st.button("Add measurements"):
         date_str = dt.strftime(date, '%Y-%m-%d')
         MEASUREMENTS_HISTORY_FILE = check_file(f"{user.get_folder()}/measurements_history.json")
-        measurements_history = load_json_data(MEASUREMENTS_HISTORY_FILE)
+        measurements_history = get_data_fast(MEASUREMENTS_HISTORY_FILE)
         for measurement in measurements_history:
             if measurement["date"] == date_str:
                 st.info("There already are measurements for this day, select another one or edit the measurements of that day")
@@ -132,7 +132,7 @@ def add_measurements_dialog():
         measurements_history.append({"date": date_str, "measurements": default_measurements})
         
         measurements_history = sorted(measurements_history, key=lambda x: dt.strptime(x["date"], '%Y-%m-%d').date())
-        save_json_data(MEASUREMENTS_HISTORY_FILE, measurements_history)
+        save_data_fast(MEASUREMENTS_HISTORY_FILE, measurements_history)
 
         if "measurements_index" not in st.session_state or st.session_state["measurements_index"] < len(measurements_history) - 1:
             st.session_state["measurements_index"] = len(measurements_history) - 1
@@ -142,10 +142,10 @@ def add_measurements_dialog():
             user.set_measurements(measurements=measurements)
 
             USERS_FILE = check_file(f"data/users.json")
-            users_data = load_json_data(USERS_FILE)
+            users_data = get_data_fast(USERS_FILE)
             for i in range(len(users_data)):
                 if users_data[i]["id"] == user.get_id():
                     users_data[i]["measurements"] = measurements
                     break
-            save_json_data(USERS_FILE, users_data)
+            save_data_fast(USERS_FILE, users_data)
         st.rerun()

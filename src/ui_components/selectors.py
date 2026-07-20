@@ -12,7 +12,7 @@ def muscle_select():
     if "muscle_index" not in st.session_state:
         st.session_state["muscle_index"] = None
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
-    muscles_data = load_json_data(MUSCLES_FILE)
+    muscles_data = get_data_fast(MUSCLES_FILE)
     muscle_names = [muscle_data["name"].title().replace("_", " ") for muscle_data in muscles_data]
 
     muscle_name = st.selectbox(
@@ -26,7 +26,7 @@ def muscle_select():
         if muscle_name not in muscle_names:
             muscle = Muscle(name=muscle_name.lower().replace(" ", "_"))
             muscles_data.append(muscle.to_json())
-            if save_json_data(MUSCLES_FILE, muscles_data):
+            if save_data_fast(MUSCLES_FILE, muscles_data):
                 st.session_state["muscle_index"] = len(muscle_names)
                 st.rerun()
         else:
@@ -42,7 +42,7 @@ def exercise_select():
     if "exercise_index" not in st.session_state:
         st.session_state["exercise_index"] = None
     EXERCISES_FILE = check_file(f"{user.get_folder()}/exercises.json")
-    exercises_data = load_json_data(EXERCISES_FILE)
+    exercises_data = get_data_fast(EXERCISES_FILE)
     exercise_names = [exercise_data["name"].title().replace("_", " ") for exercise_data in exercises_data]
 
     exercise_name = st.selectbox(
@@ -56,7 +56,7 @@ def exercise_select():
         if exercise_name not in exercise_names:
             exercise = Exercise(name=exercise_name.lower().replace(" ", "_"))
             exercises_data.append(exercise.to_json())
-            if save_json_data(EXERCISES_FILE, exercises_data):
+            if save_data_fast(EXERCISES_FILE, exercises_data):
                 st.session_state["exercise_index"] = len(exercise_names)
                 st.rerun()
         else:
@@ -74,7 +74,7 @@ def workout_select():
     if "workout_index" not in st.session_state:
         st.session_state["workout_index"] = None
     WORKOUTS_FILE = check_file(f"{user.get_folder()}/workouts.json")
-    workouts_data = load_json_data(WORKOUTS_FILE)
+    workouts_data = get_data_fast(WORKOUTS_FILE)
     workout_names = [workout_data["name"].replace("_", " ").title() for workout_data in workouts_data]
 
     workout_name = st.selectbox(
@@ -89,7 +89,7 @@ def workout_select():
         if workout_name not in workout_names:
             workout = Workout(name=workout_name.lower().replace(" ", "_"))
             workouts_data.append(workout.to_json())
-            if save_json_data(WORKOUTS_FILE, workouts_data):
+            if save_data_fast(WORKOUTS_FILE, workouts_data):
                 st.session_state["workout_index"] = len(workout_names)
                 st.rerun()
         else:
@@ -117,7 +117,7 @@ def microcycle_select(macrocycle):
 def macrocycle_select(index="macrocycle_index"):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
-    macrocycles_data = load_json_data(MACROCYCLES_FILE)
+    macrocycles_data = get_data_fast(MACROCYCLES_FILE)
     macrocycle_names = [macrocycle_data["name"].replace("_", " ").title() for macrocycle_data in macrocycles_data]
     if index not in st.session_state:
         st.session_state[index] = None
@@ -357,7 +357,7 @@ def measurements_multiselect():
 
 def user_select():
     USERS_FILE = check_file("data/users.json")
-    users_data = load_json_data(USERS_FILE)
+    users_data = get_data_fast(USERS_FILE)
     user_ids = [user_data["id"] for user_data in users_data]
     user_id = st.selectbox(
         label="User",

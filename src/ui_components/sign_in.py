@@ -1,6 +1,5 @@
 import streamlit as st
 from src.utils.auth import *
-from src.utils.database import add_weigh_in
 
 def log_in():
     #LOG IN
