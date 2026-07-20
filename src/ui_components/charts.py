@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-from src.utils.database import get_categories_dict, get_bodyweight_history_list, get_muscle_list, get_macrocycle_list
+from src.utils.database import get_categories_dict, get_bodyweight_history_list, get_muscle_list, get_macrocycle_list, get_measurements_history_list
 from src.ui_components.sign_in import is_logged_in
 from src.models.Muscle import Muscle
 from datetime import datetime as dt, timedelta
@@ -134,7 +134,7 @@ def weight_evolution_chart(time_range):
 
     df = pd.DataFrame(user_bodyweight_history)
     df["date"] = pd.to_datetime(df["date"]).dt.date
-    df.sort_values("date")
+    df = df.sort_values("date")
 
     today = dt.today().date()
     filtered_df = df.copy()
@@ -177,6 +177,80 @@ def weight_evolution_chart(time_range):
         margin=dict(t=10, b=10, l=10, r=10),
         xaxis=dict(showgrid=False, color="rgba(255,255,255,0.6)", tickformat="%d %b"),
         yaxis=dict(gridcolor="rgba(255, 255, 255, 0.1)", color="rgba(255,255,255,0.6)", autorange=True)
+    )
+
+    st.plotly_chart(fig, width="content", config={"displayModeBar": False})
+
+def measurements_evolution_chart(time_range, selected_measurements):
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    user_measurements_history = get_measurements_history_list(user=user)
+    user_macrocycles = get_macrocycle_list(user=user)
+    if len(user_macrocycles) > 0:
+        selected_macrocycle = user_macrocycles[st.session_state.get("macrocycle_stats_index", -1)]
+
+    if len(user_measurements_history) == 0:
+        st.info("Not enough data to show user's bodyweight evolution.")
+        return
+
+    rows = []
+    for entry in user_measurements_history:
+        row = {"date": entry["date"]}
+        row.update(entry["measurements"])
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    df = df.sort_values("date")
+
+    today = dt.today().date()
+    filtered_df = df.copy()
+
+    match(time_range):
+        case "last week":
+            filtered_df = df[df["date"] >= (today - timedelta(days=7))]
+        case "last 30 days":
+            filtered_df = df[df["date"] >= (today - timedelta(days=30))]
+        case "last 90 days":
+            filtered_df = df[df["date"] >= (today - timedelta(days=90))]
+        case "start of macrocycle":
+            filtered_df = df[df["date"] >= (dt.strptime(selected_macrocycle.get_start_date(), '%Y-%m-%d').date())]
+        case "custom":
+            if "custom_date_range" not in st.session_state:
+                st.session_state["custom_date_range"] = (df["date"].min(), df["date"].max())
+            custom_date_range = st.session_state["custom_date_range"]
+            if isinstance(custom_date_range, tuple) and len(custom_date_range) == 2:
+                start_date, end_date = custom_date_range
+                filtered_df = df[(df["date"] >= start_date) & (df["date"] <= end_date)]
+    
+    if filtered_df.empty:
+        st.info("Not enough data to show user's bodyweight evolution.")
+        return
+
+    fig = go.Figure()
+
+    for measurement in selected_measurements:
+        if measurement in filtered_df.columns:
+            m_df = filtered_df[['date', measurement]].dropna()
+
+            color_config = dict(color="#FF4B4B") if len(selected_measurements) == 1 else None
+
+            fig.add_trace(go.Scatter(
+                x=m_df["date"],
+                y=m_df[measurement],
+                mode="lines+markers",
+                line=dict(color=color_config["color"] if color_config else None, width=3),
+                marker=dict(size=7, color=color_config["color"] if color_config else None),
+                hovertemplate=f"{measurement} <br>Date: %{{x}}<br>Value: %{{y}} cm"
+            ))
+
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=30, b=10, l=10, r=10),
+        xaxis=dict(showgrid=False, color="rgba(255,255,255,0.6)", tickformat="%d %b"),
+        yaxis=dict(gridcolor="rgba(255, 255, 255, 0.1)", color="rgba(255,255,255,0.6)", autorange=True),
+        showlegend=len(selected_measurements) > 1,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
 
     st.plotly_chart(fig, width="content", config={"displayModeBar": False})

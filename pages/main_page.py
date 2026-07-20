@@ -2,12 +2,12 @@ import streamlit as st
 from src.ui_components.sign_in import is_logged_in
 from src.ui_components.cards import weight_card, height_card, weight_delta_card,macrocycle_stats_cards, measurements_delta_card
 from src.ui_components.dialogues import weigh_in_dialog, set_height_dialog, add_measurements_dialog
-from src.ui_components.selectors import delta_past_date_selector, main_page_stats_selector, weight_evolution_date_select
-from src.ui_components.selectors import macrocycle_select, macrocycle_stats_select, muscle_multiselect, measurements_date_select
-from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart
+from src.ui_components.selectors import delta_past_date_selector, main_page_stats_selector, stats_evolution_date_select
+from src.ui_components.selectors import macrocycle_select, macrocycle_stats_select, muscle_multiselect, measurements_date_select, measurements_multiselect
+from src.ui_components.charts import weight_evolution_chart, muscle_volume_chart, microcycles_muscle_volume_chart, measurements_evolution_chart
 from src.ui_components.forms import edit_weight_evolution_form
 from src.ui_components.tables import measurements_table
-from src.utils.database import get_macrocycle_list
+from src.utils.database import get_macrocycle_list, get_bodyweight_history_list, get_measurements_history_list
 
 st.set_page_config(page_title="Primeapes", page_icon=":material/exercise:")
 
@@ -50,7 +50,7 @@ st.divider()
 match st.session_state["main_page_stats"]:
     case "weight":
         st.write("##### Bodyweight evolution")
-        time_range = weight_evolution_date_select()
+        time_range = stats_evolution_date_select(index="weight_evolution_date", user_history=get_bodyweight_history_list(user=st.session_state["user"]))
         weight_evolution_chart(time_range=time_range)
 
         edit_button_container = st.container(horizontal_alignment="right")
@@ -85,6 +85,12 @@ match st.session_state["main_page_stats"]:
         with col_loss:
             measurements_delta_card(past_date=st.session_state["measurements_past_date"], is_gain=False, last_entry=measurements_data)
             delta_past_date_selector(session_state="measurements_past_date")
+
+        st.divider()
+
+        time_range = stats_evolution_date_select(index="measurements_evolution_date", user_history=get_measurements_history_list(user=st.session_state["user"]))
+        selected_measurements = measurements_multiselect()
+        measurements_evolution_chart(time_range=time_range, selected_measurements=selected_measurements)
 
     case "macrocycle":
         st.write("##### Macrocycle stats")

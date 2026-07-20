@@ -151,8 +151,9 @@ def muscle_multiselect():
     def handle_change_multiselect():
         st.session_state["default_muscles"] = st.session_state["muscles_multiselect"]
 
-    categories = st.multiselect(
-        label="Categories",
+    muscles = st.multiselect(
+        label="Muscles",
+        placeholder="Select muscles to see their sets",
         accept_new_options=False,
         options=muscle_names,
         default=st.session_state["default_muscles"],
@@ -160,7 +161,7 @@ def muscle_multiselect():
         on_change=handle_change_multiselect,
         max_selections=6
     )
-    return categories
+    return muscles
 
 def category_multiselect():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
@@ -253,10 +254,10 @@ def macrocycle_stats_select():
     )
     return macrocycle_stats
 
-def weight_evolution_date_select():
+def stats_evolution_date_select(index, user_history):
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
-    if "weight_evolution_date" not in st.session_state:
-        st.session_state["weight_evolution_date"] = "forever"
+    if index not in st.session_state:
+        st.session_state[index] = "last 30 days"
     if "custom_range" not in st.session_state:
         st.session_state["custom_range"] = False
 
@@ -267,8 +268,8 @@ def weight_evolution_date_select():
         options.insert(-2, "start of macrocycle")
 
     def handle_date_select():
-        st.session_state["weight_evolution_date"] = st.session_state["weight_evo_date_selector"]
-        if st.session_state["weight_evo_date_selector"] == "custom":
+        st.session_state[index] = st.session_state["stats_evo_date_selector"]
+        if st.session_state["stats_evo_date_selector"] == "custom":
             st.session_state["custom_range"] = True
         else:
             st.session_state["custom_range"] = False
@@ -281,15 +282,18 @@ def weight_evolution_date_select():
             label="Time range:",
             options=options,
             accept_new_options=False,
-            index=options.index(st.session_state["weight_evolution_date"]),
-            key="weight_evo_date_selector",
+            index=options.index(st.session_state[index]),
+            key="stats_evo_date_selector",
             on_change=handle_date_select,
             format_func=lambda x: x.title()
         )
     with col_date:
-        user_bodyweight_history = get_bodyweight_history_list(user=user)
-        min_possible = user_bodyweight_history[0]["date"]
-        max_possible = user_bodyweight_history[-1]["date"]
+        if not user_history:
+            min_possible = dt.today().date().strftime('%Y-%m-%d')
+            max_possible = min_possible
+        else:
+            min_possible = user_history[0]["date"]
+            max_possible = user_history[-1]["date"]
         custom_date_range = st.date_input(
             label="Custom range:",
             value=(min_possible, max_possible),
@@ -322,6 +326,34 @@ def measurements_date_select():
         measurements = measurements_map[measurements_date]
     return measurements
 
+def measurements_multiselect():
+    user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
+    user_measurements_history = get_measurements_history_list(user)
+
+    measurement_names = set()
+    for entry in user_measurements_history:
+        for measurement in entry["measurements"]:
+            measurement_names.add(measurement)
+    measurement_names = sorted(list(measurement_names))
+
+    if "default_measurements" not in st.session_state:
+        st.session_state["default_measurements"] = measurement_names
+
+    def handle_change_multiselect():
+        st.session_state["default_measurements"] = st.session_state["measurements_multiselect"]
+
+    measurements = st.multiselect(
+        label="Measurements",
+        placeholder="Select measurements to compare",
+        accept_new_options=False,
+        options=measurement_names,
+        default=st.session_state["default_measurements"],
+        key="measurements_multiselect",
+        on_change=handle_change_multiselect,
+        format_func=lambda x: x.replace("_", " ").title(),
+        max_selections=6
+    )
+    return measurements
 
 def user_select():
     USERS_FILE = check_file("data/users.json")
