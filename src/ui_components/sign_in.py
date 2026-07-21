@@ -1,6 +1,5 @@
 import streamlit as st
 from src.utils.auth import *
-from src.utils.database import add_weigh_in
 
 def log_in():
     #LOG IN
@@ -54,7 +53,6 @@ def log_in():
                     st.error("Invalid username or password")
             if st.session_state["new_user_data"] != False:
                 user = initialize_new_user(user_id=new_username, name=st.session_state["new_user_data"]["name"], weight=st.session_state["new_user_data"]["weight"], height=st.session_state["new_user_data"]["height"])
-                add_weigh_in(user=user, weight=st.session_state["new_user_data"]["weight"])
                 st.session_state["new_user_data"] = False
                 st.success("Your account was successfully created! Now, please log in.")
 

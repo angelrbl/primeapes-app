@@ -119,6 +119,8 @@ def weight_delta_card(past_date):
     max_margin_days = margin_map[past_date]
 
     user_bodyweight_history = get_bodyweight_history_list(user=user)
+    if len(user_bodyweight_history) <= 0:
+        return
     last_entry = user_bodyweight_history[-1]
     target_date = dt.strptime(last_entry["date"], '%Y-%m-%d').date() - td(days=num_of_days)
 
