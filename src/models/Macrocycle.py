@@ -46,9 +46,7 @@ class Macrocycle:
 
     def clear_microcycles(self):
         for microcycle in self.microcycles:
-            print(microcycle.get_workouts())
             microcycle.clear_workouts()
-            print(microcycle.get_workouts())
         return True
 
     def get_muscle_sets(self):
