@@ -13,7 +13,7 @@ def muscle_table(muscle):
         return
     MUSCLES_FILE = check_file(f"{user.get_folder()}/muscles.json")
     table_data = [
-        {"Muscle": muscle.get_name().title(), "Categories": muscle.get_categories()}
+        {"Muscle": muscle.get_name().title().replace("_", " "), "Categories": muscle.get_categories()}
     ]
 
     edited_data = st.data_editor(
@@ -68,13 +68,13 @@ def exercise_table(exercise):
                 "Primary muscles",
                 help="Exercise's primary muscles",
                 options=Muscle.to_name_list(get_muscle_list(user)),
-                format_func=lambda x: x.capitalize()
+                format_func=lambda x: x.capitalize().replace("_", " ")
             ),
             "Secondary muscles": st.column_config.MultiselectColumn(
                 "Secondary muscles",
                 help="Exercise's secondary muscles",
                 options=Muscle.to_name_list(get_muscle_list(user)),
-                format_func=lambda x: x.capitalize()
+                format_func=lambda x: x.capitalize().replace("_", " ")
             )
         }
     )

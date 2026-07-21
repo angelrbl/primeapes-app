@@ -1,1 +1,550 @@
-[{"name": "bench_press", "primary_muscles": ["pec"], "secondary_muscles": ["shoulder", "triceps"]}]
+[
+    {
+        "name": "incline_dumbbell_press",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "anterior_delt",
+            "triceps"
+        ]
+    },
+    {
+        "name": "bench_press",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "anterior_delt",
+            "triceps"
+        ]
+    },
+    {
+        "name": "incline_smith_machine_press",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "anterior_delt",
+            "triceps"
+        ]
+    },
+    {
+        "name": "pec_deck_flye",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "anterior_delt"
+        ]
+    },
+    {
+        "name": "weighted_chest_dips",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "triceps",
+            "anterior_delt"
+        ]
+    },
+    {
+        "name": "cable_flyes",
+        "primary_muscles": [
+            "chest"
+        ],
+        "secondary_muscles": [
+            "anterior_delt"
+        ]
+    },
+    {
+        "name": "deadlift",
+        "primary_muscles": [
+            "lower_back",
+            "glutes"
+        ],
+        "secondary_muscles": [
+            "hamstrings",
+            "upper_back",
+            "traps",
+            "forearms"
+        ]
+    },
+    {
+        "name": "sumo_deadlift",
+        "primary_muscles": [
+            "glutes",
+            "adductors"
+        ],
+        "secondary_muscles": [
+            "quads",
+            "lower_back",
+            "hamstrings",
+            "traps",
+            "forearms"
+        ]
+    },
+    {
+        "name": "rack_pulls",
+        "primary_muscles": [
+            "traps",
+            "upper_back"
+        ],
+        "secondary_muscles": [
+            "lower_back",
+            "forearms"
+        ]
+    },
+    {
+        "name": "t_bar_row",
+        "primary_muscles": [
+            "upper_back"
+        ],
+        "secondary_muscles": [
+            "lats",
+            "rear_delt",
+            "biceps",
+            "forearms"
+        ]
+    },
+    {
+        "name": "lat_pulldown",
+        "primary_muscles": [
+            "lats"
+        ],
+        "secondary_muscles": [
+            "biceps",
+            "upper_back",
+            "rear_delt"
+        ]
+    },
+    {
+        "name": "single_arm_dumbbell_row",
+        "primary_muscles": [
+            "lats"
+        ],
+        "secondary_muscles": [
+            "upper_back",
+            "biceps",
+            "forearms"
+        ]
+    },
+    {
+        "name": "barbell_bent_over_row",
+        "primary_muscles": [
+            "upper_back"
+        ],
+        "secondary_muscles": [
+            "lats",
+            "lower_back",
+            "rear_delt",
+            "biceps"
+        ]
+    },
+    {
+        "name": "weighted_pull_ups",
+        "primary_muscles": [
+            "lats"
+        ],
+        "secondary_muscles": [
+            "biceps",
+            "upper_back",
+            "forearms"
+        ]
+    },
+    {
+        "name": "dumbbell_pullover",
+        "primary_muscles": [
+            "lats",
+            "chest"
+        ],
+        "secondary_muscles": [
+            "triceps",
+            "abs"
+        ]
+    },
+    {
+        "name": "cable_pullover",
+        "primary_muscles": [
+            "lats"
+        ],
+        "secondary_muscles": [
+            "triceps",
+            "chest",
+            "abs"
+        ]
+    },
+    {
+        "name": "seated_cable_row_close_grip",
+        "primary_muscles": [
+            "lats"
+        ],
+        "secondary_muscles": [
+            "biceps",
+            "upper_back",
+            "rear_delt"
+        ]
+    },
+    {
+        "name": "seated_cable_row_wide_grip",
+        "primary_muscles": [
+            "upper_back"
+        ],
+        "secondary_muscles": [
+            "rear_delt",
+            "lats",
+            "biceps"
+        ]
+    },
+    {
+        "name": "machine_chest_supported_row",
+        "primary_muscles": [
+            "upper_back"
+        ],
+        "secondary_muscles": [
+            "lats",
+            "rear_delt",
+            "biceps"
+        ]
+    },
+    {
+        "name": "shrugs",
+        "primary_muscles": [
+            "traps"
+        ],
+        "secondary_muscles": [
+            "forearms"
+        ]
+    },
+    {
+        "name": "face_pull",
+        "primary_muscles": [
+            "rear_delt"
+        ],
+        "secondary_muscles": [
+            "upper_back",
+            "traps"
+        ]
+    },
+    {
+        "name": "cable_rear_delt_flye",
+        "primary_muscles": [
+            "rear_delt"
+        ],
+        "secondary_muscles": [
+            "upper_back"
+        ]
+    },
+    {
+        "name": "overhead_press",
+        "primary_muscles": [
+            "anterior_delt"
+        ],
+        "secondary_muscles": [
+            "triceps",
+            "chest"
+        ]
+    },
+    {
+        "name": "cable_lateral_raise",
+        "primary_muscles": [
+            "side_delt"
+        ],
+        "secondary_muscles": [
+            "traps"
+        ]
+    },
+    {
+        "name": "dumbbell_lateral_raise",
+        "primary_muscles": [
+            "side_delt"
+        ],
+        "secondary_muscles": [
+            "traps"
+        ]
+    },
+    {
+        "name": "machine_lateral_raise",
+        "primary_muscles": [
+            "side_delt"
+        ],
+        "secondary_muscles": [
+            "traps"
+        ]
+    },
+    {
+        "name": "reverse_pec_deck_flye",
+        "primary_muscles": [
+            "rear_delt"
+        ],
+        "secondary_muscles": [
+            "upper_back"
+        ]
+    },
+    {
+        "name": "incline_dumbbell_bicep_curl",
+        "primary_muscles": [
+            "biceps"
+        ],
+        "secondary_muscles": [
+            "forearms"
+        ]
+    },
+    {
+        "name": "preacher_curl",
+        "primary_muscles": [
+            "biceps"
+        ],
+        "secondary_muscles": [
+            "forearms"
+        ]
+    },
+    {
+        "name": "hammer_curl",
+        "primary_muscles": [
+            "biceps"
+        ],
+        "secondary_muscles": [
+            "forearms"
+        ]
+    },
+    {
+        "name": "bayesian_curl",
+        "primary_muscles": [
+            "biceps"
+        ],
+        "secondary_muscles": [
+            "forearms"
+        ]
+    },
+    {
+        "name": "overhead_cable_tricep_extension",
+        "primary_muscles": [
+            "triceps"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "cable_tricep_pushdown",
+        "primary_muscles": [
+            "triceps"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "skullcrushers",
+        "primary_muscles": [
+            "triceps"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "cable_tricep_extension",
+        "primary_muscles": [
+            "triceps"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "french_press",
+        "primary_muscles": [
+            "triceps"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "squat",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "adductors",
+            "lower_back"
+        ]
+    },
+    {
+        "name": "hack_squat_machine",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "adductors"
+        ]
+    },
+    {
+        "name": "pendulum_squat",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "adductors"
+        ]
+    },
+    {
+        "name": "leg_extension",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "bulgarian_squat",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "adductors"
+        ]
+    },
+    {
+        "name": "front_squat",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "abs"
+        ]
+    },
+    {
+        "name": "leg_press",
+        "primary_muscles": [
+            "quads"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "adductors"
+        ]
+    },
+    {
+        "name": "romanian_deadlift",
+        "primary_muscles": [
+            "hamstrings"
+        ],
+        "secondary_muscles": [
+            "glutes",
+            "lower_back"
+        ]
+    },
+    {
+        "name": "seated_leg_curl",
+        "primary_muscles": [
+            "hamstrings"
+        ],
+        "secondary_muscles": [
+            "calves"
+        ]
+    },
+    {
+        "name": "lying_leg_curl",
+        "primary_muscles": [
+            "hamstrings"
+        ],
+        "secondary_muscles": [
+            "calves"
+        ]
+    },
+    {
+        "name": "hip_thrust",
+        "primary_muscles": [
+            "glutes"
+        ],
+        "secondary_muscles": [
+            "hamstrings"
+        ]
+    },
+    {
+        "name": "machine_adduction",
+        "primary_muscles": [
+            "adductors"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "machine_abduction",
+        "primary_muscles": [
+            "adductors"
+        ],
+        "secondary_muscles": [
+            "glutes"
+        ]
+    },
+    {
+        "name": "standing_calf_raise",
+        "primary_muscles": [
+            "calves"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "seated_calf_raise",
+        "primary_muscles": [
+            "calves"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "cable_crunch",
+        "primary_muscles": [
+            "abs"
+        ],
+        "secondary_muscles": [
+            "obliques"
+        ]
+    },
+    {
+        "name": "ab_wheel_rollout",
+        "primary_muscles": [
+            "abs"
+        ],
+        "secondary_muscles": [
+            "lats",
+            "lower_back"
+        ]
+    },
+    {
+        "name": "hanging_leg_raise",
+        "primary_muscles": [
+            "abs"
+        ],
+        "secondary_muscles": [
+            "obliques"
+        ]
+    },
+    {
+        "name": "standing_cable_woodchopper",
+        "primary_muscles": [
+            "obliques"
+        ],
+        "secondary_muscles": [
+            "abs"
+        ]
+    },
+    {
+        "name": "wrist_curl",
+        "primary_muscles": [
+            "forearms"
+        ],
+        "secondary_muscles": []
+    },
+    {
+        "name": "reverse_curl",
+        "primary_muscles": [
+            "forearms"
+        ],
+        "secondary_muscles": [
+            "biceps"
+        ]
+    },
+    {
+        "name": "cable_glute_kickback",
+        "primary_muscles": [
+            "glutes"
+        ],
+        "secondary_muscles": []
+    }
+]

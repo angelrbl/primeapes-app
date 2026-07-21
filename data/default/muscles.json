@@ -1,1 +1,149 @@
-[{"name": "back", "categories": ["upper", "posterior_chain", "pull"]}, {"name": "pec", "categories": ["push", "upper"]}, {"name": "shoulder", "categories": []}, {"name": "biceps", "categories": ["arm", "upper", "pull"]}, {"name": "triceps", "categories": ["upper", "arm", "push"]}, {"name": "quadriceps", "categories": []}, {"name": "hamstrings", "categories": []}, {"name": "abs", "categories": []}, {"name": "calves", "categories": []}]
+[
+    {
+        "name": "chest",
+        "categories": []
+    },
+    {
+        "name": "anterior_delt",
+        "categories": [
+            "shoulders",
+            "push",
+            "upper",
+            "anterior_chain"
+        ]
+    },
+    {
+        "name": "side_delt",
+        "categories": [
+            "shoulders",
+            "push",
+            "upper"
+        ]
+    },
+    {
+        "name": "rear_delt",
+        "categories": [
+            "shoulders",
+            "pull",
+            "upper",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "lats",
+        "categories": [
+            "back",
+            "pull",
+            "upper",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "upper_back",
+        "categories": [
+            "back",
+            "pull",
+            "upper",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "traps",
+        "categories": [
+            "back",
+            "pull",
+            "upper",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "lower_back",
+        "categories": [
+            "back",
+            "pull",
+            "core",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "biceps",
+        "categories": [
+            "arms",
+            "pull",
+            "upper"
+        ]
+    },
+    {
+        "name": "triceps",
+        "categories": [
+            "arms",
+            "push",
+            "upper"
+        ]
+    },
+    {
+        "name": "forearms",
+        "categories": [
+            "arms",
+            "upper"
+        ]
+    },
+    {
+        "name": "quads",
+        "categories": [
+            "legs",
+            "lower",
+            "anterior_chain"
+        ]
+    },
+    {
+        "name": "hamstrings",
+        "categories": [
+            "legs",
+            "lower",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "glutes",
+        "categories": [
+            "legs",
+            "lower",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "adductors",
+        "categories": [
+            "legs",
+            "lower"
+        ]
+    },
+    {
+        "name": "abductors",
+        "categories": [
+            "legs",
+            "lower"
+        ]
+    },
+    {
+        "name": "calves",
+        "categories": [
+            "legs",
+            "lower",
+            "posterior_chain"
+        ]
+    },
+    {
+        "name": "abs",
+        "categories": [
+            "core"
+        ]
+    },
+    {
+        "name": "obliques",
+        "categories": [
+            "core"
+        ]
+    }
+]
