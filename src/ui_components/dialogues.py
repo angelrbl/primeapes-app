@@ -69,6 +69,7 @@ def add_macrocycle_dialog():
                 microcycles_data.append(microcycle.to_json()) 
             if save_data_fast(MICROCYCLES_FILE, microcycles_data):
                 st.session_state["macrocycle_index"] = len(macrocycles_data) - 1
+                st.session_state["macrocycle_stats_index"] = len(macrocycles_data) - 1
                 st.rerun()
 
 @st.dialog("Weigh in")

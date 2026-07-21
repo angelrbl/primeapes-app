@@ -1,7 +1,12 @@
 [
     {
         "name": "chest",
-        "categories": []
+        "categories": [
+            "chest",
+            "push",
+            "upper",
+            "anterior_chain"
+        ]
     },
     {
         "name": "anterior_delt",

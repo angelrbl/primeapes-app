@@ -1,1 +1,10 @@
-[{"id": "admin", "name": "Admin", "weight": 100.0, "height": 200.0, "measurements": {}, "user_folder": "data/default"}]
+[
+    {
+        "id": "admin",
+        "name": "Admin",
+        "weight": 100.0,
+        "height": 200.0,
+        "measurements": {},
+        "user_folder": "data/default"
+    }
+]

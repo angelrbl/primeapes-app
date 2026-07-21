@@ -147,6 +147,7 @@ def workout_table(workout):
 
         st.session_state[state_key] = table_data
 
+    user_muscles = Muscle.to_name_list(get_muscle_list(user=user))
 
     edited_data = st.data_editor(
         data=st.session_state[state_key], key=f"{workout.get_name()}_table", hide_index=True, num_rows="dynamic", disabled=["muscles"],
@@ -164,7 +165,8 @@ def workout_table(workout):
             "muscles": st.column_config.MultiselectColumn(
                 "Muscles",
                 help="Exercise's primary muscles",
-                format_func=lambda x: x.capitalize().replace("_", " ") if x else ""
+                options=user_muscles,
+                format_func=lambda x: x.capitalize().replace("_", " ")
             ),
             "note": st.column_config.TextColumn("Note", default="")
     })

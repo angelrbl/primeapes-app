@@ -167,7 +167,7 @@ def category_multiselect():
     user = st.session_state["user"] if st.session_state["user"] else is_logged_in()
     user_categories = get_categories_list(user)
     if "default_categories" not in st.session_state:
-        st.session_state["default_categories"] = [element for element in ["Arm", "Back", "Chest", "Legs", "Shoulder", "Core"] if element in user_categories]
+        st.session_state["default_categories"] = [element for element in ["Arms", "Back", "Chest", "Legs", "Shoulders", "Core"] if element in user_categories]
 
     def handle_change_multiselect():
         st.session_state["default_categories"] = st.session_state["categories_multiselect"]
@@ -179,7 +179,7 @@ def category_multiselect():
         default=st.session_state["default_categories"],
         key="categories_multiselect",
         on_change=handle_change_multiselect,
-        max_selections=6
+        max_selections=None
     )
     return categories
 

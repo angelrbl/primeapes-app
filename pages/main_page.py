@@ -99,6 +99,8 @@ match st.session_state["main_page_stats"]:
         if not macrocycles:
             st.info("There are no macrocycles to show stats from.")
             st.stop()
+        if "macrocycle_stats_index" not in st.session_state:
+            st.session_state["macrocycle_stats_index"] = len(macrocycles) - 1
         macrocycle = macrocycles[st.session_state.get("macrocycle_stats_index", -1)]
 
         macrocycle_stats_cards(macrocycle=macrocycle)
