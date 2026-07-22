@@ -327,23 +327,23 @@ def macrocycle_table(macrocycle):
         row_height=85,
         placeholder=""
     )
-    col_pagination, col_clear = st.columns([0.7,0.3], vertical_alignment="center")
+    col_pagination, col_clear, col_delete = st.columns([0.5,0.25, 0.25], vertical_alignment="center")
     with col_pagination:
-        if pagination_needed:
-            total_pages = int(ceil(macrocycle.get_length() / 4))
-            current_page_index = (st.session_state["first_microcycle"] // 4 + 1)
+        total_pages = int(ceil(macrocycle.get_length() / 4))
+        current_page_index = (st.session_state["first_microcycle"] // 4 + 1)
 
-            def handle_page_change():
-                selected_page = st.session_state["macrocycle_pagination"] - 1
-                st.session_state["first_microcycle"] = selected_page * 4
-                st.session_state["last_microcycle"] = selected_page * 4 + 4
+        def handle_page_change():
+            selected_page = st.session_state["macrocycle_pagination"] - 1
+            st.session_state["first_microcycle"] = selected_page * 4
+            st.session_state["last_microcycle"] = selected_page * 4 + 4
 
-            st.pagination(
-                total_pages,
-                default=current_page_index,
-                key="macrocycle_pagination",
-                on_change=handle_page_change
-            )
+        st.pagination(
+            total_pages,
+            default=current_page_index,
+            key="macrocycle_pagination",
+            on_change=handle_page_change,
+            disabled=not pagination_needed
+        )
     with col_clear:
         if col_clear.button(label="Clear Workouts",icon=":material/delete:", key="macrocycle_clear_button", width="stretch"):
             microcycles_data = get_data_fast(MICROCYCLE_FILE)
@@ -356,6 +356,20 @@ def macrocycle_table(macrocycle):
                     if microcycle.get_id() == microcycles_data[i]["id"]:
                         microcycles_data[i] = microcycle.to_json()
             if save_data_fast(MICROCYCLE_FILE, microcycles_data):
+                st.rerun()
+    with col_delete:
+        if col_delete.button("Delete macrocycle", icon=":material/delete:", key="macrocycle_delete_button", width="stretch"):
+            MACROCYCLES_FILE = check_file(f"{user.get_folder()}/macrocycles.json")
+            macrocycles_data = get_data_fast(MACROCYCLES_FILE)
+            microcycles_data = get_data_fast(MICROCYCLE_FILE)
+            macrocycle_name = macrocycle.get_name()
+            
+            macrocycles_data = [m for m in macrocycles_data if m["name"] != macrocycle_name]
+            microcycles_data = [m for m in microcycles_data if m.get("id", "").rsplit("_", 1)[0] != macrocycle_name]
+
+            save_data_fast(MICROCYCLE_FILE, microcycles_data)
+            if save_data_fast(MACROCYCLES_FILE, macrocycles_data):
+                st.session_state["macrocycle_index"] = None
                 st.rerun()
 
 def measurements_table(measurements_data):
