@@ -283,9 +283,9 @@ def macrocycle_table(macrocycle):
     if not macrocycle:
         return
     
-    if not "first_microcycle" in st.session_state or not "last_microcycle" in st.session_state:
+    if not ("first_microcycle" in st.session_state and "last_microcycle" in st.session_state):
         st.session_state["first_microcycle"] = 0
-        st.session_state["last_macrocycle"] = 4
+        st.session_state["last_microcycle"] = 4
 
     if macrocycle.get_length() <= 4:
         pagination_needed = False
