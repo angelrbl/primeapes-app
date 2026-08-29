@@ -306,13 +306,13 @@ def macrocycle_table(macrocycle):
         )
     }
     
-    for i in range(st.session_state["first_microcycle"], st.session_state["last_microcycle"]):
+    for i in range(st.session_state["first_microcycle"], min(st.session_state["last_microcycle"], macrocycle.get_length())):
         table_data.append({})
         microcycle = macrocycle.get_microcycle(i)
         workouts = microcycle.get_workouts()
         table_data[i - st.session_state["first_microcycle"]]["week"] = f"Week {i + 1}"
         for j in range(len(workouts)):
-                table_data[i - st.session_state["first_microcycle"]][f"day_{j}"] = workouts[j].get_name().replace("_", " ").title() if workouts[j] is not None else None
+            table_data[i - st.session_state["first_microcycle"]][f"day_{j}"] = workouts[j].get_name().replace("_", " ").title() if workouts[j] else None
     for k in range(len(table_data[0].keys())):
         columns_config[f"day_{k}"] = st.column_config.TextColumn(
                     f"Day {k+1}",
