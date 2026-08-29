@@ -351,7 +351,7 @@ def measurements_multiselect():
         key="measurements_multiselect",
         on_change=handle_change_multiselect,
         format_func=lambda x: x.replace("_", " ").title(),
-        max_selections=6
+        max_selections=None
     )
     return measurements
 
