@@ -1,7 +1,7 @@
 [
     {
         "date": "2026-08-01",
-        "measurements": {
+        "meaurements": {
             "hombros": 131.0,
             "torso": 107.0,
             "cintura": 84.5,
@@ -32,14 +32,14 @@
     {
         "date": "2026-09-29",
         "measurements": {
-            "hombros": 131.5,
-            "torso": 110.0,
-            "cintura": 81.0,
+            "hombros": 132,
+            "torso": 110.5,
+            "cintura": 79.0,
             "brazo_(izq.)": 38.0,
-            "brazo_(der.)": 37.5,
-            "cuello": 42.0,
-            "pierna_(izq.)": 63.0,
-            "pierna_(der.)": 62.5,
+            "brazo_(der.)": 37.75,
+            "cuello": 41.5,
+            "pierna_(izq.)": 61.0,
+            "pierna_(der.)": 60.5,
             "gemelo_(izq.)": 40.0,
             "gemelo_(der.)": 40.0
         }
