@@ -1,0 +1,17 @@
+[
+    {
+        "name": "agosto_2026",
+        "start_date": "2026-08-03",
+        "description": "Primer macrocyclo con primeapes, toma de contacto.",
+        "length": 6,
+        "microcycles": [
+            "agosto_2026_w0",
+            "agosto_2026_w1",
+            "agosto_2026_w2",
+            "agosto_2026_w3",
+            "agosto_2026_w4",
+            "agosto_2026_w5"
+        ],
+        "microcycle_length": 7
+    }
+]

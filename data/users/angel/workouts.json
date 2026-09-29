@@ -1,0 +1,315 @@
+[
+    {
+        "name": "push",
+        "exercises": [
+            {
+                "exercise": "bench_press",
+                "sets": 3,
+                "reps": "3-5",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "incline_dumbbell_press",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "dumbbell_lateral_raise",
+                "sets": 3,
+                "reps": "12-15",
+                "muscles": [
+                    "side_delt"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "overhead_cable_tricep_extension",
+                "sets": 3,
+                "reps": "10-12",
+                "muscles": [
+                    "triceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_lateral_raise",
+                "sets": 3,
+                "reps": "12-15",
+                "muscles": [
+                    "side_delt"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_tricep_extension",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "triceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "pec_deck_flye",
+                "sets": 2,
+                "reps": "8-10",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            }
+        ]
+    },
+    {
+        "name": "pull",
+        "exercises": [
+            {
+                "exercise": "weighted_pull_ups",
+                "sets": 3,
+                "reps": "5-12",
+                "muscles": [
+                    "lats"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "seated_cable_row_wide_grip",
+                "sets": 2,
+                "reps": "10-15",
+                "muscles": [
+                    "upper_back"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_pullover",
+                "sets": 3,
+                "reps": "8-15",
+                "muscles": [
+                    "lats"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "bayesian_curl",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "biceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "hammer_curl",
+                "sets": 2,
+                "reps": "10-15",
+                "muscles": [
+                    "biceps"
+                ],
+                "note": ""
+            }
+        ]
+    },
+    {
+        "name": "abs",
+        "exercises": []
+    },
+    {
+        "name": "chest_+_back",
+        "exercises": [
+            {
+                "exercise": "bench_press",
+                "sets": 3,
+                "reps": "3-5",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "weighted_pull_ups",
+                "sets": 3,
+                "reps": "5-12",
+                "muscles": [
+                    "lats"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "incline_dumbbell_press",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "seated_cable_row_wide_grip",
+                "sets": 3,
+                "reps": "10-15",
+                "muscles": [
+                    "upper_back"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "pec_deck_flye",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "chest"
+                ],
+                "note": ""
+            }
+        ]
+    },
+    {
+        "name": "arm",
+        "exercises": [
+            {
+                "exercise": "machine_overhead_press",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "front_delt"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "overhead_cable_tricep_extension",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "triceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "dumbbell_lateral_raise",
+                "sets": 3,
+                "reps": "10-15",
+                "muscles": [
+                    "side_delt"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "bayesian_curl",
+                "sets": 3,
+                "reps": "10-15",
+                "muscles": [
+                    "biceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_lateral_raise",
+                "sets": 3,
+                "reps": "10-15",
+                "muscles": [
+                    "side_delt"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_tricep_extension",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "triceps"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "hammer_curl",
+                "sets": 2,
+                "reps": "10-15",
+                "muscles": [
+                    "biceps"
+                ],
+                "note": ""
+            }
+        ]
+    },
+    {
+        "name": "leg",
+        "exercises": [
+            {
+                "exercise": "romanian_deadlift",
+                "sets": 2,
+                "reps": "8-12",
+                "muscles": [
+                    "hamstrings"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "multipower_squat",
+                "sets": 2,
+                "reps": "5-10",
+                "muscles": [
+                    "quads"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "standing_calf_raise",
+                "sets": 3,
+                "reps": "10-15",
+                "muscles": [
+                    "calves"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "seated_leg_curl",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "hamstrings"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "leg_extension",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "quads"
+                ],
+                "note": ""
+            },
+            {
+                "exercise": "cable_crunch",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "abs"
+                ],
+                "note": ""
+            }
+        ]
+    },
+    {
+        "name": "push_2",
+        "exercises": [
+            {
+                "exercise": "bench_press",
+                "sets": 3,
+                "reps": "8-12",
+                "muscles": [
+                    "chest"
+                ],
+                "note": "al fallo "
+            }
+        ]
+    }
+]

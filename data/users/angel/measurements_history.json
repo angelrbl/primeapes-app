@@ -1,0 +1,47 @@
+[
+    {
+        "date": "2026-08-01",
+        "measurements": {
+            "hombros": 131.0,
+            "torso": 107.0,
+            "cintura": 84.5,
+            "brazo_(izq.)": 37.0,
+            "brazo_(der.)": 37.5,
+            "cuello": 42.5,
+            "pierna_(izq.)": 63.0,
+            "pierna_(der.)": 63.0,
+            "gemelo_(izq.)": 40.0,
+            "gemelo_(der.)": 40.3
+        }
+    },
+    {
+        "date": "2026-08-20",
+        "measurements": {
+            "hombros": 131.5,
+            "torso": 110.0,
+            "cintura": 81.0,
+            "brazo_(izq.)": 38.0,
+            "brazo_(der.)": 37.5,
+            "cuello": 42.0,
+            "pierna_(izq.)": 63.0,
+            "pierna_(der.)": 62.5,
+            "gemelo_(izq.)": 40.0,
+            "gemelo_(der.)": 40.0
+        }
+    },
+    {
+        "date": "2026-09-29",
+        "measurements": {
+            "hombros": 131.5,
+            "torso": 110.0,
+            "cintura": 81.0,
+            "brazo_(izq.)": 38.0,
+            "brazo_(der.)": 37.5,
+            "cuello": 42.0,
+            "pierna_(izq.)": 63.0,
+            "pierna_(der.)": 62.5,
+            "gemelo_(izq.)": 40.0,
+            "gemelo_(der.)": 40.0
+        }
+    }
+]
