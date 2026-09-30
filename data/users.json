@@ -6,5 +6,21 @@
         "height": 200.0,
         "measurements": {},
         "user_folder": "data/default"
+    },
+    {
+        "id": "carlos",
+        "name": "aa",
+        "weight": 2.0,
+        "height": 2.0,
+        "measurements": {},
+        "user_folder": "data/users/carlos"
+    },
+    {
+        "id": "angel",
+        "name": "Ángel",
+        "weight": 82.2,
+        "height": 185.0,
+        "measurements": {},
+        "user_folder": "data/users/angel"
     }
 ]
